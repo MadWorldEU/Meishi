@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Solution/">
+    <File Path=".gitignore" />
+    <File Path="LICENSE" />
+    <File Path="Meishi.slnx" />
+    <File Path="README.md" />
+  </Folder>
+</Solution>
