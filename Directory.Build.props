@@ -1,0 +1,22 @@
+<Project>
+    <PropertyGroup>
+        <Company>Mad-World.eu</Company>
+        <Copyright>Copyright (c) Mad-World.eu 2026</Copyright>
+        <Authors>Oscar Veldman</Authors>
+        <Product>Meishi</Product>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <!-- CA1873: LoggerMessage delegates are not required for this project. Use standard ILogger extension methods instead. -->
+        <!-- NU1901: Package with known low-severity vulnerability. -->
+        <!-- NU1902: Package with known moderate-severity vulnerability. -->
+        <!-- NU1903: Package with known high-severity vulnerability. -->
+        <NoWarn>$(NoWarn);CA1873;NU1901;NU1902;NU1903</NoWarn>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>MadWorldEU.Meishi</RootNamespace>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+</Project>

@@ -1,0 +1,6 @@
+@MadWorldEU.Meishi.Controllers.Api_HostAddress = http://localhost:5005
+
+GET {{MadWorldEU.Meishi.Controllers.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

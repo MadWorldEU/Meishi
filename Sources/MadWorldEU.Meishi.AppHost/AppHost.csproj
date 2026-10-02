@@ -1,0 +1,12 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.1.0">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <UserSecretsId>c6d55534-dbbc-4425-8846-d24cc6c31f83</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MadWorldEU.Meishi.Controllers.Api\Api.csproj" />
+    </ItemGroup>
+
+</Project>

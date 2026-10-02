@@ -1,8 +1,17 @@
 <Solution>
   <Folder Name="/Solution/">
+    <File Path=".dockerignore" />
     <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
     <File Path="LICENSE" />
     <File Path="Meishi.slnx" />
     <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Sources/">
+    <Project Path="Sources\MadWorldEU.Meishi.AppHost\AppHost.csproj" />
+  </Folder>
+  <Folder Name="/Sources/Controllers/">
+    <Project Path="Sources\MadWorldEU.Meishi.Controllers.Api\Api.csproj" />
   </Folder>
 </Solution>
