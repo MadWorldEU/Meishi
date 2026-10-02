@@ -8,6 +8,15 @@
     <File Path="Meishi.slnx" />
     <File Path="README.md" />
   </Folder>
+  <Folder Name="/Solution/Documentations/">
+    <File Path="Documentations\docfx.json" />
+    <File Path="Documentations\index.md" />
+    <File Path="Documentations\toc.yml" />
+  </Folder>
+  <Folder Name="/Solution/Documentations/DeveloperGuides/">
+    <File Path="Documentations\DeveloperGuides\DocFx.md" />
+    <File Path="Documentations\DeveloperGuides\toc.yml" />
+  </Folder>
   <Folder Name="/Sources/">
     <Project Path="Sources\MadWorldEU.Meishi.AppHost\AppHost.csproj" />
   </Folder>

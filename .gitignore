@@ -430,3 +430,6 @@ FodyWeavers.xsd
 
 # Jetbrains Rider
 .idea
+
+# DocFX
+_site
