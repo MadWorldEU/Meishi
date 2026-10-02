@@ -8,6 +8,10 @@
     <File Path="Meishi.slnx" />
     <File Path="README.md" />
   </Folder>
+  <Folder Name="/Solution/.github/" />
+  <Folder Name="/Solution/.github/workflows/">
+    <File Path=".github\workflows\generate-docs.yml" />
+  </Folder>
   <Folder Name="/Solution/Documentations/">
     <File Path="Documentations\docfx.json" />
     <File Path="Documentations\index.md" />
