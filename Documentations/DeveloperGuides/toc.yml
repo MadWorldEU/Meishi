@@ -1,2 +1,4 @@
 - name: DocFx
   href: DocFx.md
+- name: Setup GitHub
+  href: SetupGithub.md

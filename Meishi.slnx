@@ -11,6 +11,7 @@
   </Folder>
   <Folder Name="/Solution/.github/" />
   <Folder Name="/Solution/.github/workflows/">
+    <File Path=".github\workflows\docker-build-push.yml" />
     <File Path=".github\workflows\generate-docs.yml" />
   </Folder>
   <Folder Name="/Solution/Documentations/">
@@ -20,6 +21,7 @@
   </Folder>
   <Folder Name="/Solution/Documentations/DeveloperGuides/">
     <File Path="Documentations\DeveloperGuides\DocFx.md" />
+    <File Path="Documentations\DeveloperGuides\SetupGithub.md" />
     <File Path="Documentations\DeveloperGuides\toc.yml" />
   </Folder>
   <Folder Name="/Sources/">
