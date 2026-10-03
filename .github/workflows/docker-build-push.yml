@@ -19,6 +19,9 @@ jobs:
           - name: API
             dockerfile: Sources/MadWorldEU.Meishi.Controllers.Api/Dockerfile
             image: madworldeu-meishi-api
+          - name: Portal
+            dockerfile: Sources/MadWorldEU.Meishi.Controllers.Portal/Dockerfile
+            image: madworldeu-meishi-portal
     
     steps:
       - name: Checkout repo
