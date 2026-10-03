@@ -6,6 +6,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Aspire.Hosting.JavaScript" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\MadWorldEU.Meishi.Controllers.Api\Api.csproj" />
     </ItemGroup>
 

@@ -1,29 +1,4 @@
 <Solution>
-  <Folder Name="/Solution/">
-    <File Path=".dockerignore" />
-    <File Path=".gitignore" />
-    <File Path="Directory.Build.props" />
-    <File Path="Directory.Packages.props" />
-    <File Path="LICENSE" />
-    <File Path="Meishi.slnx" />
-    <File Path="nuget.config" />
-    <File Path="README.md" />
-  </Folder>
-  <Folder Name="/Solution/.github/" />
-  <Folder Name="/Solution/.github/workflows/">
-    <File Path=".github\workflows\docker-build-push.yml" />
-    <File Path=".github\workflows\generate-docs.yml" />
-  </Folder>
-  <Folder Name="/Solution/Documentations/">
-    <File Path="Documentations\docfx.json" />
-    <File Path="Documentations\index.md" />
-    <File Path="Documentations\toc.yml" />
-  </Folder>
-  <Folder Name="/Solution/Documentations/DeveloperGuides/">
-    <File Path="Documentations\DeveloperGuides\DocFx.md" />
-    <File Path="Documentations\DeveloperGuides\SetupGithub.md" />
-    <File Path="Documentations\DeveloperGuides\toc.yml" />
-  </Folder>
   <Folder Name="/Sources/">
     <Project Path="Sources\MadWorldEU.Meishi.AppHost\AppHost.csproj" />
   </Folder>

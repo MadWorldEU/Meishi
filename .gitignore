@@ -428,6 +428,9 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
+# Visual Studio Code
+.vscode
+
 # Jetbrains Rider
 .idea
 

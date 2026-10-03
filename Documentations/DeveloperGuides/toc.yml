@@ -2,3 +2,5 @@
   href: DocFx.md
 - name: Setup GitHub
   href: SetupGithub.md
+- name: Setup Development Environment
+  href: SetupDevEnvironment.md
