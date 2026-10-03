@@ -5,7 +5,7 @@
 FROM node:24-alpine AS build
 WORKDIR /src
 COPY ["Sources/MadWorldEU.Meishi.Controllers.Portal/package.json", "Sources/MadWorldEU.Meishi.Controllers.Portal/package-lock.json", "./"]
-RUN npm ci
+RUN npm ci --ignore-scripts
 COPY ["Sources/MadWorldEU.Meishi.Controllers.Portal/angular.json", "Sources/MadWorldEU.Meishi.Controllers.Portal/tsconfig*.json", "./"]
 COPY ["Sources/MadWorldEU.Meishi.Controllers.Portal/public", "./public"]
 COPY ["Sources/MadWorldEU.Meishi.Controllers.Portal/src", "./src"]
