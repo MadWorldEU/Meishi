@@ -7,12 +7,14 @@ This guide explains what you need to install to build and run both projects on y
 
 ## Prerequisites
 
-| Tool | Version | Needed for |
-|------|---------|------------|
-| [.NET SDK](https://dotnet.microsoft.com/download/dotnet/10.0) | 10.0 | API and AppHost |
-| [Node.js](https://nodejs.org/) | 22.22.3+, 24.15.0+ or 26+ | Portal |
-| npm | Comes with Node.js | Portal |
-| [Docker](https://docs.docker.com/get-started/get-docker/) | Any recent version | Optional, only to build the API container image |
+| Tool                                                          | Version                                 | Needed for                                      |
+|---------------------------------------------------------------|-----------------------------------------|-------------------------------------------------|
+| [.NET SDK](https://dotnet.microsoft.com/download/dotnet/10.0) | 10.0                                    | API and AppHost                                 |
+| [Node.js](https://nodejs.org/)                                | 22.22.3+, 24.15.0+ or 26+               | Portal                                          |
+| npm                                                           | Comes with Node.js                      | Portal                                          |
+| [Docker](https://docs.docker.com/get-started/get-docker/)     | Any recent version                      | Optional, only to build the API container image |
+| [kubectl](https://kubernetes.io/docs/tasks/tools/)            | Within one minor version of the cluster | Deployments                                     |
+| [Helm](https://helm.sh/docs/intro/install/)                   | Any recent version                      | Deployments                                     |
 
 An IDE such as JetBrains Rider, Visual Studio or Visual Studio Code is recommended. For Visual Studio Code, install the recommended [Angular Language Service](https://marketplace.visualstudio.com/items?itemName=Angular.ng-template) extension for the Portal.
 
@@ -116,3 +118,27 @@ for b in node npm npx; do ln -sfn "$NODE_BIN/$b" ~/.local/bin/$b; done
 ```
 
 Restart your IDE, or log out and back in, so it picks up the new `PATH`. The links point to a specific Node.js version, so run the commands again after changing the default version with `nvm alias default <version>`.
+
+## Deployments
+
+The Helm chart in `Deployments/VPS` deploys Meishi to Kubernetes. You only need these tools if you deploy, not to build or run the applications locally.
+
+1. Install [kubectl](https://kubernetes.io/docs/tasks/tools/) and [Helm](https://helm.sh/docs/intro/install/). On Ubuntu you can install both with snap:
+
+```bash
+sudo snap install kubectl --classic
+sudo snap install helm --classic
+```
+
+2. Check that both tools are installed:
+
+```bash
+kubectl version --client
+helm version
+```
+
+3. Check that the chart is valid, from the root of the repository:
+
+```bash
+helm lint Deployments/VPS
+```
