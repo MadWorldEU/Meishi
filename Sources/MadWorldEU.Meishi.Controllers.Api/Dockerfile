@@ -7,6 +7,9 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY ["Directory.Build.props", "."]
+COPY ["Directory.Packages.props", "."]
+COPY ["nuget.config", "."]
 COPY ["Sources/MadWorldEU.Meishi.Controllers.Api/Api.csproj", "Sources/MadWorldEU.Meishi.Controllers.Api/"]
 RUN dotnet restore "Sources/MadWorldEU.Meishi.Controllers.Api/Api.csproj"
 COPY . .
