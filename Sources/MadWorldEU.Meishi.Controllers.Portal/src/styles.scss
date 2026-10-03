@@ -1,1 +1,155 @@
-/* You can add global styles to this file, and also import other style files */
+// Green phosphor terminal theme.
+:root {
+  --bg: #050a06;
+  --bg-window: #08120a;
+  --bg-titlebar: #0d1f11;
+  --green: #33ff66;
+  --green-dim: #1fae45;
+  --green-faint: #10461f;
+  --amber: #ffcc33;
+  --glow: 0 0 2px rgb(51 255 102 / 80%), 0 0 10px rgb(51 255 102 / 35%);
+
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, 'Cascadia Mono', monospace;
+  --font-display: 'VT323', var(--font-mono);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: radial-gradient(ellipse at center, #0a1a0d 0%, var(--bg) 75%) fixed;
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1.65;
+  text-shadow: var(--glow);
+}
+
+// CRT scanlines over the whole page.
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 0%) 0,
+    rgb(0 0 0 / 0%) 2px,
+    rgb(0 0 0 / 25%) 3px
+  );
+  animation: flicker 6s infinite;
+  z-index: 100;
+}
+
+::selection {
+  background: var(--green);
+  color: var(--bg);
+  text-shadow: none;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+dl {
+  margin: 0;
+}
+
+a {
+  color: var(--green);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--green-dim);
+
+  &:hover,
+  &:focus-visible {
+    background: var(--green);
+    color: var(--bg);
+    text-shadow: none;
+    outline: none;
+  }
+}
+
+.muted {
+  color: var(--green-dim);
+}
+
+.accent {
+  color: var(--amber);
+  text-shadow: 0 0 6px rgb(255 204 51 / 45%);
+}
+
+// Prompt line: "visitor@cv:~$ command"
+.prompt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.6ch;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+
+  &__user {
+    color: var(--green);
+  }
+
+  &__path {
+    color: var(--amber);
+    text-shadow: 0 0 6px rgb(255 204 51 / 45%);
+  }
+
+  &__command {
+    font-weight: 400;
+  }
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.15em;
+  vertical-align: text-bottom;
+  background: var(--green);
+  box-shadow: var(--glow);
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor,
+  body::after {
+    animation: none;
+  }
+}
+
+@media print {
+  html,
+  body {
+    background: #fff;
+    color: #000;
+    text-shadow: none;
+  }
+
+  body::after,
+  .cursor {
+    display: none;
+  }
+}

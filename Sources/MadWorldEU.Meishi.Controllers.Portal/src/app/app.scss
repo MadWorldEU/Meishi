@@ -1,0 +1,153 @@
+:host {
+  display: block;
+  padding: 2.5rem 1rem;
+}
+
+.terminal {
+  max-width: 900px;
+  margin-inline: auto;
+  background: var(--bg-window);
+  border: 1px solid var(--green-faint);
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 60%),
+    0 0 40px rgb(51 255 102 / 12%),
+    0 20px 60px rgb(0 0 0 / 70%);
+  overflow: hidden;
+}
+
+.terminal__titlebar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  background: var(--bg-titlebar);
+  border-bottom: 1px solid var(--green-faint);
+  font-size: 0.85rem;
+}
+
+.terminal__dots {
+  position: absolute;
+  left: 1rem;
+  display: flex;
+  gap: 0.45rem;
+
+  i {
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 1px solid var(--green-dim);
+    border-radius: 50%;
+  }
+
+  i:first-child {
+    background: var(--green-dim);
+  }
+}
+
+.terminal__title {
+  color: var(--green-dim);
+}
+
+.terminal__body {
+  padding: 1.5rem clamp(1rem, 4vw, 2.5rem) 2rem;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px dashed var(--green-faint);
+}
+
+.block {
+  margin-bottom: 2.25rem;
+  scroll-margin-top: 1rem;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3rem, 10vw, 5rem);
+  line-height: 1;
+  letter-spacing: 0.04em;
+}
+
+.indent {
+  max-width: 70ch;
+  padding-left: 2ch;
+  border-left: 1px solid var(--green-faint);
+}
+
+.entries {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.entry__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 1.5ch;
+}
+
+.entry__title {
+  font-size: 1rem;
+}
+
+.entry__list {
+  padding-left: 4ch;
+  list-style: none;
+
+  li::before {
+    content: '-> ';
+    margin-left: -3ch;
+    color: var(--green-dim);
+  }
+}
+
+.skills {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem 2rem;
+}
+
+.skills__group {
+  font-size: 1rem;
+  color: var(--amber);
+  text-shadow: 0 0 6px rgb(255 204 51 / 45%);
+  margin-bottom: 0.25rem;
+}
+
+.skill {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1ch;
+
+  dd {
+    margin: 0;
+    white-space: nowrap;
+  }
+}
+
+.skill__bar {
+  margin-right: 1ch;
+}
+
+.contact__row {
+  display: flex;
+  gap: 2ch;
+
+  dt {
+    min-width: 9ch;
+  }
+
+  dd {
+    margin: 0;
+  }
+}
