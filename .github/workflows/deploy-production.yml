@@ -1,0 +1,53 @@
+name: Deploy production
+on:
+  push:
+    tags:
+      - 'v*'
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+
+permissions:
+  contents: read
+
+jobs:
+  dry-run:
+    if: true # github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@dda3372f752e03dde6b3237bc9431cdc2f7a02a2 #v5
+
+      - name: Dry run
+        run: |
+          helm template meishi Deployments/VPS \
+            --values Deployments/VPS/values.yaml > /dev/null
+  
+  deployment:
+    if: false # github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: vps-production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@dda3372f752e03dde6b3237bc9431cdc2f7a02a2 #v5
+
+      - name: Write kubeconfig
+        env:
+          KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG }}
+        run: |
+          mkdir -p ~/.kube
+          echo "$KUBECONFIG_CONTENT" | base64 -d  > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Deploy
+        run: |
+          helm upgrade --install meishi Deployments/VPS \
+            --values Deployments/VPS/values.yaml \
+            --wait \
+            --timeout 5m
