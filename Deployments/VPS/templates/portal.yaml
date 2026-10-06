@@ -17,11 +17,11 @@ spec:
     spec:
       automountServiceAccountToken: false
       containers:
-        - name: { { .Values.portal.name } }
+        - name: {{ .Values.portal.name }}
           image: "{{ .Values.portal.image.repository }}:{{ .Values.appVersion }}"
-          imagePullPolicy: { { .Values.imagePullPolicy } }
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           ports:
-            - containerPort: { { .Values.portal.port } }
+            - containerPort: {{ .Values.portal.port }}
 ---
 apiVersion: v1
 kind: Service
