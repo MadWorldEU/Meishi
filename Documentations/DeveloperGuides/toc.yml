@@ -1,9 +1,11 @@
 - name: DocFx
   href: DocFx.md
-- name: Setup GitHub
-  href: SetupGithub.md
+- name: Versions
+  href: Versions.md
 - name: Setup Development Environment
   href: SetupDevEnvironment.md
+- name: Setup GitHub
+  href: SetupGithub.md
 - name: Setup VPS
   href: SetupVPS.md
 - name: DNS Configurations
