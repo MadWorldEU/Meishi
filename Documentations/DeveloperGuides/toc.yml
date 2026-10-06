@@ -4,5 +4,7 @@
   href: SetupGithub.md
 - name: Setup Development Environment
   href: SetupDevEnvironment.md
+- name: Setup VPS
+  href: SetupVPS.md
 - name: DNS Configurations
   href: DNS.md
