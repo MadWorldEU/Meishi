@@ -10,3 +10,5 @@
   href: SetupVPS.md
 - name: DNS Configurations
   href: DNS.md
+- name: Kubernetes
+  href: Kubernetes.md
