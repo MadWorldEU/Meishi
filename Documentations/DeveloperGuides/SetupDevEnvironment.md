@@ -71,6 +71,19 @@ dotnet dev-certs https --trust
 
 This installs a locally-trusted root certificate, so the HTTPS endpoints (e.g. the Aspire dashboard at https://localhost:17268) are trusted by your browser without certificate warnings.
 
+### Linux: Give Docker User Rights
+
+Add your user to the `docker` group so you can run Docker commands without `sudo`:
+
+```bash
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
+sudo systemctl restart docker
+```
+
+After running these commands, log out and back in (or restart your shell) for the group membership to take full effect.
+
 ## Portal
 
 1. Install Node.js. Angular 22 supports Node.js `^22.22.3`, `^24.15.0` or `>=26.0.0`. With [nvm](https://github.com/nvm-sh/nvm) you can install it with:
