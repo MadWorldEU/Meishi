@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.portal.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.portal.name }}
+spec:
+  replicas: {{ .Values.portal.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.portal.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.portal.name }}
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: { { .Values.portal.name } }
+          image: "{{ .Values.portal.image.repository }}:{{ .Values.appVersion }}"
+          imagePullPolicy: { { .Values.imagePullPolicy } }
+          ports:
+            - containerPort: { { .Values.portal.port } }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.portal.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.portal.name }}
+spec:
+  selector:
+    app: {{ .Values.portal.name }}
+  ports:
+    - port: {{ .Values.portal.port }}
+      targetPort: {{ .Values.portal.port }}
+      protocol: TCP
