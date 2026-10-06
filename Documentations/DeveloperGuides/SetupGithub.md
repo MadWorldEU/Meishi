@@ -108,7 +108,8 @@ The secret contains the kubeconfig file encoded as base64:
 Copy the kubeconfig of the cluster from the server to your machine. The default location is `~/.kube/config`; on k3s it is `/etc/rancher/k3s/k3s.yaml`:
 
 ```bash
-scp user@your-server:/etc/rancher/k3s/k3s.yaml ./kubeconfig
+sudo microk8s config > ~/.kube/config
+scp user@your-server:~/.kube/config ./kubeconfig
 ```
 
 Open the file and check that the `server` field points to an address the GitHub runner can reach.
@@ -130,17 +131,51 @@ kubectl --kubeconfig ./kubeconfig get nodes
 ```
 
 ### 2. Encode the kubeconfig as base64
-The workflow decodes the secret with `base64 -d`, so encode the file as a single line:
+The workflow decodes the secret with `base64 -d`, so encode the file as a single line.
+Base64 turns the content of a file into plain text with only letters, digits, `+`, `/` and `=`, so it can be stored safely as a secret.
+
+On Linux the `base64` command is installed by default. Open a terminal in the folder with the `kubeconfig` file and run:
 
 ```bash
-# Linux
 base64 -w 0 ./kubeconfig
+```
 
-# macOS
+| Part           | Meaning                                                                          |
+|----------------|----------------------------------------------------------------------------------|
+| `base64`       | The program that encodes the file                                                |
+| `-w 0`         | Wrap width `0`: write the output on one line. Without it a line break is added every 76 characters |
+| `./kubeconfig` | The file to encode                                                               |
+
+The command prints the encoded text in the terminal. It does not change the file itself.
+
+On macOS the output is already on one line, so use:
+
+```bash
 base64 -i ./kubeconfig
 ```
 
 Copy the output.
+Instead of selecting the text in the terminal you can also copy it straight to the clipboard:
+
+```bash
+# Linux (Wayland)
+base64 -w 0 ./kubeconfig | wl-copy
+
+# Linux (X11)
+base64 -w 0 ./kubeconfig | xclip -selection clipboard
+
+# macOS
+base64 -i ./kubeconfig | pbcopy
+```
+
+To check the result, decode it again and compare it with the original file. The command prints `OK` when both are the same:
+
+```bash
+base64 -w 0 ./kubeconfig | base64 -d | diff - ./kubeconfig && echo OK
+```
+
+> [!WARNING]
+> Base64 is an encoding, not an encryption. Anyone with the encoded text can decode it, so treat it as secret as the kubeconfig itself.
 
 ### 3. Add the environment secret
 1. Open the repository on GitHub and go to **Settings → Environments**.
