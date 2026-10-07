@@ -86,6 +86,26 @@ In SonarQube Cloud, open the project and go to **Administration → Analysis Met
 > [!TIP]
 > When the token expires the analysis step fails with a `401` error. Generate a new token and update the `SONAR_TOKEN` secret.
 
+## Documentation pipeline
+The workflow `.github/workflows/generate-docs.yml` builds this documentation with [docfx](https://dotnet.github.io/docfx/):
+- On every pull request it builds the site to check that it still generates.
+- On every push to `main` it publishes the site to GitHub Pages through the environment `github-pages`.
+
+### 1. Enable GitHub Pages
+1. Open the repository on GitHub and go to **Settings → Pages**.
+2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+
+### 2. Protect the environment
+Only the `main` branch may publish the documentation.
+GitHub creates the environment `github-pages` the first time Pages is enabled; open **Settings → Environments → github-pages** and configure the deployment rule:
+
+1. Under **Deployment branches and tags**, change the dropdown to **Selected branches and tags**.
+2. Remove any other rules, then click **Add deployment branch or tag rule**.
+3. Set **Ref type** to **Branch** and enter the name pattern `main`.
+4. Click **Add rule**.
+
+A run from any other branch or tag is now rejected at the **publish-docs** job.
+
 ## Deploy production pipeline
 The workflow `.github/workflows/deploy-production.yml` deploys the Helm chart in `Deployments/VPS` to the Kubernetes cluster:
 - On every pull request it runs `helm template` as a dry run to check that the chart renders.
@@ -203,10 +223,26 @@ base64 -w 0 ./kubeconfig | base64 -d | diff - ./kubeconfig && echo OK
 
 4. Delete the local `kubeconfig` file; it gives full access to the cluster.
 
-> [!TIP]
-> Add **Required reviewers** or a **Deployment branches and tags** rule to the `vps-production` environment, so only approved runs or `v*` tags can use the secret.
+### 4. Protect the environment
+The secrets in `vps-production` give full access to the cluster, so only approved runs from a version tag may use them.
+Open **Settings → Environments → vps-production** and configure the following protection rules:
 
-### 4. Run the pipeline
+1. **Required reviewers**
+   1. Check **Required reviewers**.
+   2. Add the users or teams that must approve a production deployment.
+   3. Click **Save protection rules**.
+2. **Deployment branches and tags**
+   1. Change the dropdown from **No restriction** to **Selected branches and tags**.
+   2. Click **Add deployment branch or tag rule**.
+   3. Set **Ref type** to **Tag** and enter the name pattern `v*`.
+   4. Click **Add rule**.
+
+A deployment now waits in the **Actions** tab until a reviewer clicks **Review deployments → Approve and deploy**, and runs from a branch or any other tag are rejected.
+
+> [!NOTE]
+> The `v*` rule only checks the tag name. Anyone with write access can still push a `v*` tag, which is why the required reviewers are needed as well.
+
+### 5. Run the pipeline
 Push a version tag:
 
 ```bash
@@ -214,7 +250,7 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
-Open the **Actions** tab to follow the run.
+Open the **Actions** tab to follow the run, and approve the deployment when the job waits for review.
 
 > [!TIP]
 > When the step **Write kubeconfig** succeeds but **Deploy** fails with `Kubernetes cluster unreachable`, check the `server` address and the firewall. When it fails with `base64: invalid input`, encode the file again without line breaks.
