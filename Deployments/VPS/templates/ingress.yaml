@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: meishi-ingress
+  namespace: {{ .Values.namespace }}
+  annotations:
+    {{- if .Values.clusterIssuer.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.clusterIssuer.name | quote }}
+    {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  tls:
+    - secretName: {{ .Values.ingress.tlsSecret }}
+      hosts:
+          - {{ .Values.ingress.domain }}
+          - www.{{ .Values.ingress.domain }}
+  rules:
+      - host: www.{{ .Values.ingress.domain }}
+        http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: {{ .Values.portal.name }}
+                  port:
+                    number: {{ .Values.portal.port }}
+      - host: {{ .Values.ingress.domain }}
+        http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: {{ .Values.portal.name }}
+                  port:
+                    number: {{ .Values.portal.port }}

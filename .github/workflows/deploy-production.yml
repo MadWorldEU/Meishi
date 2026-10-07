@@ -26,7 +26,9 @@ jobs:
       - name: Dry run
         run: |
           helm template meishi Deployments/VPS \
-            --values Deployments/VPS/values.yaml > /dev/null
+            --values Deployments/VPS/values.yaml \
+            --values Deployments/VPS/production-values.yaml \
+            --set clusterIssuer.email="dry-run@example.com" > /dev/null
   
   deployment:
     if: github.event_name == 'push'
@@ -48,8 +50,13 @@ jobs:
           chmod 600 ~/.kube/config
 
       - name: Deploy
+        env:
+          IMAGE_TAG: ${{ github.ref_name }}
+          CLUSTER_ISSUER_EMAIL: ${{ secrets.CLUSTER_ISSUER_EMAIL }}
         run: |
           helm upgrade --install meishi Deployments/VPS \
             --values Deployments/VPS/values.yaml \
+            --values Deployments/VPS/production-values.yaml \
+            --set clusterIssuer.email="$CLUSTER_ISSUER_EMAIL" \
             --wait \
             --timeout 5m

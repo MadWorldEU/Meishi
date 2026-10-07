@@ -36,6 +36,27 @@ sudo microk8s enable metrics-server
 sudo microk8s enable prometheus
 ```
 
+#### Step 3: Install Traefik
+
+Install Traefik as the ingress controller:
+
+```shell
+sudo microk8s helm repo add traefik https://traefik.github.io/charts
+sudo microk8s helm repo update
+sudo microk8s helm install traefik traefik/traefik -n traefik --create-namespace
+sudo microk8s helm upgrade traefik traefik/traefik -n traefik \
+  --set ports.web.hostPort=80 \
+  --set ports.websecure.hostPort=443 \
+  --set "additionalArguments={--entrypoints.web.http.redirections.entryPoint.to=:443,--entrypoints.web.http.redirections.entryPoint.scheme=https}" \
+  --set deployment.strategy.type=Recreate
+```
+
+If the new Traefik pod is stuck in `Pending` after an upgrade, the old pod may still be holding ports 80/443. Delete it manually:
+
+```shell
+sudo microk8s kubectl delete pod <old-traefik-pod-name> -n traefik
+```
+
 ### Configure DNS
 
 Before deploying, make sure DNS A records are configured for your domain. See the [DNS configuration guide](DNS.md) for details.

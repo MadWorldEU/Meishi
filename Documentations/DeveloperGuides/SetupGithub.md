@@ -104,6 +104,20 @@ The secret contains the kubeconfig file encoded as base64:
     chmod 600 ~/.kube/config
 ```
 
+The Helm chart also creates a cert-manager `ClusterIssuer` that requests TLS certificates from Let's Encrypt.
+Let's Encrypt needs an email address to send expiry and account notices to, so the deploy step passes the secret `CLUSTER_ISSUER_EMAIL` to the chart:
+
+```yaml
+- name: Deploy
+  env:
+    CLUSTER_ISSUER_EMAIL: ${{ secrets.CLUSTER_ISSUER_EMAIL }}
+  run: |
+    helm upgrade --install meishi Deployments/VPS \
+      --values Deployments/VPS/values.yaml \
+      --values Deployments/VPS/production-values.yaml \
+      --set clusterIssuer.email="$CLUSTER_ISSUER_EMAIL"
+```
+
 ### 1. Get the kubeconfig
 Copy the kubeconfig of the cluster from the server to your machine. The default location is `~/.kube/config`; on k3s it is `/etc/rancher/k3s/k3s.yaml`:
 
@@ -180,11 +194,12 @@ base64 -w 0 ./kubeconfig | base64 -d | diff - ./kubeconfig && echo OK
 ### 3. Add the environment secret
 1. Open the repository on GitHub and go to **Settings → Environments**.
 2. Select the environment `vps-production`, or click **New environment** and create it.
-3. Under **Environment secrets** click **Add environment secret** and add the following secret:
+3. Under **Environment secrets** click **Add environment secret** and add the following secrets:
 
-| Name         | Value                                       |
-|--------------|---------------------------------------------|
-| `KUBECONFIG` | The base64 encoded kubeconfig from step 2   |
+| Name                   | Value                                                          |
+|------------------------|----------------------------------------------------------------|
+| `KUBECONFIG`           | The base64 encoded kubeconfig from step 2                      |
+| `CLUSTER_ISSUER_EMAIL` | The email address Let's Encrypt uses for certificate notices   |
 
 4. Delete the local `kubeconfig` file; it gives full access to the cluster.
 
@@ -203,3 +218,4 @@ Open the **Actions** tab to follow the run.
 
 > [!TIP]
 > When the step **Write kubeconfig** succeeds but **Deploy** fails with `Kubernetes cluster unreachable`, check the `server` address and the firewall. When it fails with `base64: invalid input`, encode the file again without line breaks.
+> When the `ClusterIssuer` shows an ACME registration error, check that `CLUSTER_ISSUER_EMAIL` is set to a valid email address.

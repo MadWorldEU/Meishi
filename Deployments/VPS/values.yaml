@@ -2,9 +2,19 @@ namespace: meishi
 imagePullPolicy: "IfNotPresent"
 appVersion: "latest"
 
+clusterIssuer:
+  enabled: true
+  name: "letsencrypt-meishi"
+  email: "info@meishi.dev"
+
+ingress:
+  className: "traefik"
+  domain: "meishi.dev"
+  tlsSecret: "meishi-tls"
+
 portal:
   name: portal
   replicas: 1
   port: 8080
   image:
-    repository: "ghcr.io/madworldeu/byakko-portal"
+    repository: "ghcr.io/madworldeu/madworldeu-meishi-portal"
