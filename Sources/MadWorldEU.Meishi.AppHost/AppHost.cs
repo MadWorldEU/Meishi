@@ -19,4 +19,4 @@ portal
     .WaitFor(api)
     .WithExternalHttpEndpoints();
 
-builder.Build().Run();
+await builder.Build().RunAsync();

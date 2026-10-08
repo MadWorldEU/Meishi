@@ -22,6 +22,15 @@ spec:
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           ports:
             - containerPort: {{ .Values.portal.port }}
+          resources:
+            requests:
+              cpu: {{ .Values.portal.resources.requests.cpu | quote }}
+              memory: {{ .Values.portal.resources.requests.memory | quote }}
+              ephemeral-storage: {{ index .Values.portal.resources.requests "ephemeral-storage" | quote }}
+            limits:
+              cpu: {{ .Values.portal.resources.limits.cpu | quote }}
+              memory: {{ .Values.portal.resources.limits.memory | quote }}
+              ephemeral-storage: {{ index .Values.portal.resources.limits "ephemeral-storage" | quote }}
 ---
 apiVersion: v1
 kind: Service

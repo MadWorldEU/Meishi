@@ -21,4 +21,9 @@
     <Project Path="Sources/MadWorldEU.Meishi.Controllers.Portal/Portal.csproj" />
     <Project Path="Sources\MadWorldEU.Meishi.Controllers.Api\Api.csproj" />
   </Folder>
+  <Folder Name="/Sources/Core/">
+    <Project Path="Sources\MadWorldEU.Meishi.Core.Application\Application.csproj" />
+    <Project Path="Sources\MadWorldEU.Meishi.Core.Contracts\Contracts.csproj" />
+    <Project Path="Sources\MadWorldEU.Meishi.Core.Domain\Domain.csproj" />
+  </Folder>
 </Solution>

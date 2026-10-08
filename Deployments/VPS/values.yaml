@@ -1,6 +1,6 @@
 namespace: meishi
 imagePullPolicy: "IfNotPresent"
-appVersion: "latest"
+appVersion: "v1.0.0"
 
 clusterIssuer:
   enabled: true
@@ -18,3 +18,13 @@ portal:
   port: 8080
   image:
     repository: "ghcr.io/madworldeu/madworldeu-meishi-portal"
+  # Nginx serving the static Angular build needs very little CPU and memory
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "32Mi"
+      ephemeral-storage: "64Mi"
+    limits:
+      cpu: "200m"
+      memory: "128Mi"
+      ephemeral-storage: "256Mi"

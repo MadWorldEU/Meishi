@@ -10,12 +10,19 @@ This site holds the technical documentation for the Meishi project.
 
 ## Project overview
 
-Meishi is built with .NET 10 and orchestrated with .NET Aspire.
+Meishi is built with .NET 10 and Angular 22, and orchestrated with .NET Aspire.
 
-| Project | Description |
-| --- | --- |
-| `MadWorldEU.Meishi.AppHost` | Aspire AppHost that wires up and runs the services locally. |
-| `MadWorldEU.Meishi.Controllers.Api` | ASP.NET Core Web API that serves the Meishi backend. |
+| Project                                | Description                                                           |
+| -------------------------------------- | --------------------------------------------------------------------- |
+| `MadWorldEU.Meishi.AppHost`            | Aspire AppHost that wires up and runs the API and the portal locally. |
+| `MadWorldEU.Meishi.Controllers.Api`    | ASP.NET Core Web API that serves the Meishi backend.                  |
+| `MadWorldEU.Meishi.Controllers.Portal` | Angular frontend of Meishi, served by nginx in production.            |
+| `MadWorldEU.Meishi.Core.Application`   | Application layer with the use cases that the API calls.              |
+| `MadWorldEU.Meishi.Core.Contracts`     | Request and response models shared between the API and its clients.   |
+| `MadWorldEU.Meishi.Core.Domain`        | Domain layer with the core entities and business rules.               |
+| `Deployments`                          | Helm chart for deploying Meishi to the VPS with Kubernetes.           |
+| `Documentations`                       | DocFx project that generates this documentation site.                 |
+| `Github`                               | GitHub Actions workflows, issue and pull request templates.           |
 
 ## Documentation
 
