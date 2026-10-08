@@ -5,3 +5,6 @@ Meishi (名刺) – my digital business card. Personal portfolio and CV of a sof
 
 ## Documentation
 The full documentation is available at [madworldeu.github.io/Meishi](https://madworldeu.github.io/Meishi/).
+
+## License
+MIT © Oscar Veldman
