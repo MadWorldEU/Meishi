@@ -72,7 +72,7 @@ jobs:
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
             /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml" \
             /d:sonar.javascript.lcov.reportPaths="Sources/MadWorldEU.Meishi.Controllers.Portal/coverage/MadWorldEU.Meishi.Controllers.Portal/lcov.info" \
-            /d:sonar.coverage.exclusions="Sources/MadWorldEU.Meishi.AppHost/**/*,**/DebugEndpoints.cs"
+            /d:sonar.coverage.exclusions="Sources/MadWorldEU.Meishi.AppHost/**/*,**/DebugEndpoints.cs,Sources/MadWorldEU.Meishi.Controllers.Portal/**/*.spec.ts"
           dotnet restore Meishi.slnx
           dotnet build Meishi.slnx --no-restore
           dotnet-coverage collect "dotnet test Meishi.slnx --no-build" -f xml -o coverage.xml
