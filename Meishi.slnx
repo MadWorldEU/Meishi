@@ -2,6 +2,7 @@
   <Folder Name="/Solution/">
     <File Path=".dockerignore" />
     <File Path=".gitignore" />
+    <File Path="CODE_OF_CONDUCT.md" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
     <File Path="LICENSE" />
