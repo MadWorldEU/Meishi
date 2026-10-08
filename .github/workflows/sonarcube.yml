@@ -36,6 +36,12 @@ jobs:
       - name: Build Angular portal
         working-directory: Sources/MadWorldEU.Meishi.Controllers.Portal
         run: npm run build
+      - name: Test Angular portal with coverage
+        working-directory: Sources/MadWorldEU.Meishi.Controllers.Portal
+        run: |
+          npm run test:coverage
+          # lcov paths are relative to the portal; make them relative to the repository root for SonarQube.
+          sed -i 's|^SF:|SF:Sources/MadWorldEU.Meishi.Controllers.Portal/|' coverage/MadWorldEU.Meishi.Controllers.Portal/lcov.info
       - name: Cache SonarQube Cloud packages
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
@@ -65,7 +71,8 @@ jobs:
             /o:"madworldeu" \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
             /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml" \
-            /d:sonar.coverage.exclusions="Sources/MadWorldEU.Meishi.AppHost/**/*,**/DebugEndpoints.cs"
+            /d:sonar.javascript.lcov.reportPaths="Sources/MadWorldEU.Meishi.Controllers.Portal/coverage/MadWorldEU.Meishi.Controllers.Portal/lcov.info" \
+            /d:sonar.coverage.exclusions="Sources/MadWorldEU.Meishi.AppHost/**/*,**/DebugEndpoints.cs,Sources/MadWorldEU.Meishi.Controllers.Portal/**/*.spec.ts"
           dotnet restore Meishi.slnx
           dotnet build Meishi.slnx --no-restore
           dotnet-coverage collect "dotnet test Meishi.slnx --no-build" -f xml -o coverage.xml
