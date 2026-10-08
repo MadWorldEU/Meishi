@@ -40,8 +40,8 @@ jobs:
         working-directory: Sources/MadWorldEU.Meishi.Controllers.Portal
         run: |
           npm run test:coverage
-          # lcov paths are relative to the portal; make them relative to the repository root for SonarQube.
-          sed -i 's|^SF:|SF:Sources/MadWorldEU.Meishi.Controllers.Portal/|' coverage/MadWorldEU.Meishi.Controllers.Portal/lcov.info
+          # SonarScanner for .NET resolves relative paths against each project's directory, so make the lcov paths absolute.
+          sed -i "s|^SF:|SF:$PWD/|" coverage/MadWorldEU.Meishi.Controllers.Portal/lcov.info
       - name: Cache SonarQube Cloud packages
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
@@ -71,7 +71,7 @@ jobs:
             /o:"madworldeu" \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
             /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml" \
-            /d:sonar.javascript.lcov.reportPaths="Sources/MadWorldEU.Meishi.Controllers.Portal/coverage/MadWorldEU.Meishi.Controllers.Portal/lcov.info" \
+            /d:sonar.javascript.lcov.reportPaths="${{ github.workspace }}/Sources/MadWorldEU.Meishi.Controllers.Portal/coverage/MadWorldEU.Meishi.Controllers.Portal/lcov.info" \
             /d:sonar.coverage.exclusions="Sources/MadWorldEU.Meishi.AppHost/**/*,**/DebugEndpoints.cs,Sources/MadWorldEU.Meishi.Controllers.Portal/**/*.spec.ts"
           dotnet restore Meishi.slnx
           dotnet build Meishi.slnx --no-restore
