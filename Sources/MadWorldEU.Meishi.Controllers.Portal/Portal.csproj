@@ -1,2 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <!-- Keep npm and Angular output out of the project so SonarQube only analyses the portal sources. -->
+        <DefaultItemExcludes>$(DefaultItemExcludes);node_modules/**;dist/**;.angular/**</DefaultItemExcludes>
+    </PropertyGroup>
 </Project>
