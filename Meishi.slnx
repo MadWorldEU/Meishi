@@ -26,4 +26,8 @@
     <Project Path="Sources\MadWorldEU.Meishi.Core.Contracts\Contracts.csproj" />
     <Project Path="Sources\MadWorldEU.Meishi.Core.Domain\Domain.csproj" />
   </Folder>
+  <Folder Name="/Tests/" />
+  <Folder Name="/Tests/Controllers/">
+    <Project Path="Tests\MadWorldEU.Meishi.Controllers.Api.IntegrationTests\Api.IntegrationTests.csproj" />
+  </Folder>
 </Solution>
