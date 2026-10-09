@@ -3,7 +3,66 @@
 This guide provides information on how to manage and deploy applications using Kubernetes, including best practices and common configurations.
 
 ## Development environment
+### Activate Kubernetes in Docker Desktop
+* Open Docker Desktop.
+* Go to Settings > Kubernetes.
+* Enable the checkbox: Enable Kubernetes.
+* Wait for Kubernetes to start (you'll see a green light or similar status when ready).
 
+### Install Required Tools
+Make sure you have the following installed:
+* [kubectl](https://kubernetes.io/docs/tasks/tools/) – Kubernetes command-line tool.
+* [helm](https://helm.sh/docs/intro/install/) – Kubernetes package manager.
+
+### Kubernetes Dashboard
+Enable the Kubernetes Dashboard by installing [Headlamp](https://headlamp.dev/docs/latest/installation/desktop/)
+
+#### Open the Dashboard
+Launch Headlamp and select your local Docker Desktop Kubernetes cluster. The dashboard gives you a visual overview of your cluster resources, workloads, and namespaces.
+
+### Install Traefik
+Install Traefik as the ingress controller:
+```shell
+helm repo add traefik https://traefik.github.io/charts
+helm repo update
+helm install traefik traefik/traefik -n traefik --create-namespace
+helm upgrade traefik traefik/traefik -n traefik \
+  --set-json 'providers.kubernetesIngress.namespaces=["meishi"]'
+```
+
+### Configure Hosts File
+Add the following entries to your hosts file so the local domains resolve to your machine:
+
+**Windows**: `C:\Windows\System32\drivers\etc\hosts`
+**macOS / Linux**: `/etc/hosts`
+
+```
+127.0.0.1       meishi.dev
+127.0.0.1       api.meishi.dev
+127.0.0.1       www.meishi.dev
+```
+
+#### install
+Run from the root of the repository:
+```shell
+helm upgrade --install meishi Deployments/VPS -f Deployments/VPS/values.yaml
+```
+
+#### Remove
+```shell
+helm uninstall meishi .
+```
+
+### Setup TLS with mkcert
+Install [mkcert](https://github.com/FiloSottile/mkcert) and create locally-trusted certificates:
+```shell
+mkcert -install
+mkcert meishi.dev "*.meishi.dev"
+kubectl create secret tls meishi-tls \
+  --cert=meishi.dev+1.pem \
+  --key=meishi.dev+1-key.pem \
+  -n meishi
+```
 
 ## Production environment
 

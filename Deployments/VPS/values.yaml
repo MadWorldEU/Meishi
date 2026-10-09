@@ -1,9 +1,9 @@
 namespace: meishi
 imagePullPolicy: "IfNotPresent"
-appVersion: "v1.0.0"
+appVersion: "v0.3.0"
 
 clusterIssuer:
-  enabled: true
+  enabled: false
   name: "letsencrypt-meishi"
   email: "info@meishi.dev"
 
