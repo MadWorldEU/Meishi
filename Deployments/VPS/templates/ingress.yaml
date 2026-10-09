@@ -13,8 +13,19 @@ spec:
     - secretName: {{ .Values.ingress.tlsSecret }}
       hosts:
           - {{ .Values.ingress.domain }}
+          - api.{{ .Values.ingress.domain }}
           - www.{{ .Values.ingress.domain }}
   rules:
+      - host: api.{{ .Values.ingress.domain }}
+        http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: {{ .Values.api.name }}
+                  port:
+                    number: {{ .Values.api.port }}
       - host: www.{{ .Values.ingress.domain }}
         http:
           paths:

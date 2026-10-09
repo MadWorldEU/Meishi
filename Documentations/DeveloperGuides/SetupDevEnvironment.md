@@ -1,7 +1,9 @@
 # Setup Development Environment
 Meishi has two applications:
-- **API**: an ASP.NET Core API in `Sources/MadWorldEU.Meishi.Controllers.Api`. It runs locally through the .NET Aspire AppHost in `Sources/MadWorldEU.Meishi.AppHost`.
+- **API**: an ASP.NET Core API in `Sources/MadWorldEU.Meishi.Controllers.Api`.
 - **Portal**: an Angular application in `Sources/MadWorldEU.Meishi.Controllers.Portal`.
+
+Locally, both run through the .NET Aspire AppHost in `Sources/MadWorldEU.Meishi.AppHost`. It starts the API and the Portal together with the Aspire dashboard.
 
 This guide explains what you need to install to build and run both projects on your own machine.
 
@@ -41,13 +43,13 @@ dotnet dev-certs https --trust
 dotnet restore Meishi.slnx
 ```
 
-4. Start the AppHost. This starts the API and the Aspire dashboard:
+4. Start the AppHost. This starts the API, the Portal and the Aspire dashboard. Node.js must be installed first (see [Portal](#portal), step 1), because the AppHost starts the Portal with `npm`:
 
 ```bash
 dotnet run --project Sources/MadWorldEU.Meishi.AppHost
 ```
 
-5. The Aspire dashboard opens at https://localhost:17268. From there you can open the API, view its logs and traces.
+5. The Aspire dashboard opens at https://localhost:17268. From there you can open the API and the Portal, and view their logs and traces. The AppHost waits until the API is running before it starts the Portal, and gives the Portal a port of its own, so use the Portal link in the dashboard instead of http://localhost:4200. Requests from the Portal to `/api` are forwarded to the API.
 
 > [!NOTE]
 > Aspire does not need a separate workload. The AppHost uses the `Aspire.AppHost.Sdk`, which is restored from NuGet.
@@ -103,13 +105,13 @@ cd Sources/MadWorldEU.Meishi.Controllers.Portal
 npm ci
 ```
 
-3. Start the development server:
+3. Start the development server. You can skip this step when you run the AppHost, because it starts the Portal for you:
 
 ```bash
 npm start
 ```
 
-4. Open your browser and navigate to http://localhost:4200. The page reloads automatically when you change a source file.
+4. Open your browser and navigate to http://localhost:4200. The page reloads automatically when you change a source file. Without the AppHost, the Portal does not forward `/api` requests, so calls to the API do not work.
 
 The Angular CLI is installed as a local dependency, so a global install is not required. Use `npx ng <command>` to run Angular CLI commands, for example `npx ng generate component my-component`.
 
