@@ -30,17 +30,6 @@ helm upgrade traefik traefik/traefik -n traefik \
   --set-json 'providers.kubernetesIngress.namespaces=["meishi"]'
 ```
 
-### Setup TLS with mkcert
-Install [mkcert](https://github.com/FiloSottile/,) and create locally-trusted certificates:
-```shell
-mkcert -install
-mkcert meishi.dev "*.meishi.dev"
-kubectl create secret tls meishi-tls \
-  --cert=meishi.dev+1.pem \
-  --key=meishi.dev+1-key.pem \
-  -n meishi
-```
-
 ### Configure Hosts File
 Add the following entries to your hosts file so the local domains resolve to your machine:
 
@@ -54,13 +43,25 @@ Add the following entries to your hosts file so the local domains resolve to you
 ```
 
 #### install
+Run from the root of the repository:
 ```shell
-helm upgrade --install -f values.yaml meishi .
+helm upgrade --install meishi Deployments/VPS -f Deployments/VPS/values.yaml
 ```
 
 #### Remove
 ```shell
-helm uninstall -f meishi .
+helm uninstall meishi .
+```
+
+### Setup TLS with mkcert
+Install [mkcert](https://github.com/FiloSottile/mkcert) and create locally-trusted certificates:
+```shell
+mkcert -install
+mkcert meishi.dev "*.meishi.dev"
+kubectl create secret tls meishi-tls \
+  --cert=meishi.dev+1.pem \
+  --key=meishi.dev+1-key.pem \
+  -n meishi
 ```
 
 ## Production environment
