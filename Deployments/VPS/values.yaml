@@ -12,6 +12,23 @@ ingress:
   domain: "meishi.dev"
   tlsSecret: "meishi-tls"
 
+api:
+  name: api
+  replicas: 1
+  port: 8080
+  image:
+    repository: "ghcr.io/madworldeu/madworldeu-meishi-api"
+  # ASP.NET Core needs more memory than Nginx for the runtime and GC heap
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+      ephemeral-storage: "64Mi"
+    limits:
+      cpu: "500m"
+      memory: "256Mi"
+      ephemeral-storage: "256Mi"
+
 portal:
   name: portal
   replicas: 1
