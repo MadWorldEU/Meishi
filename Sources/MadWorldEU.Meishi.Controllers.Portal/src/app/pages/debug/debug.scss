@@ -1,0 +1,167 @@
+// Self-contained styles: the debug page does not use the global terminal theme.
+:host {
+  --debug-bg: #f6f7f9;
+  --debug-surface: #fff;
+  --debug-border: #d9dde3;
+  --debug-text: #1b1f24;
+  --debug-muted: #5c6670;
+  --debug-primary: #2457d6;
+  --debug-primary-hover: #1a44b0;
+  --debug-on-primary: #fff;
+  --debug-success: #17703a;
+  --debug-error: #b3261e;
+  --debug-code-bg: #eef0f3;
+
+  // Sits above the CRT scanline overlay of the global theme.
+  position: relative;
+  z-index: 101;
+  display: block;
+  min-height: 100vh;
+  padding: 3rem 1rem;
+  background: var(--debug-bg);
+  color: var(--debug-text);
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-shadow: none;
+
+  @media (prefers-color-scheme: dark) {
+    --debug-bg: #15181c;
+    --debug-surface: #1e2227;
+    --debug-border: #333a43;
+    --debug-text: #e8eaed;
+    --debug-muted: #9aa4af;
+    --debug-primary: #7da2ff;
+    --debug-primary-hover: #9db8ff;
+    --debug-on-primary: #10141a;
+    --debug-success: #6fd08c;
+    --debug-error: #ff8a80;
+    --debug-code-bg: #2a2f36;
+  }
+}
+
+.debug {
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+.debug__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.debug__title {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.debug__link {
+  color: var(--debug-primary);
+  border-bottom: none;
+
+  &:hover,
+  &:focus-visible {
+    background: none;
+    color: var(--debug-primary-hover);
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--debug-primary);
+    outline-offset: 2px;
+  }
+}
+
+.card {
+  padding: 1.5rem;
+  background: var(--debug-surface);
+  border: 1px solid var(--debug-border);
+  border-radius: 8px;
+}
+
+.card__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.card__description {
+  margin: 0.25rem 0 1.25rem;
+  color: var(--debug-muted);
+}
+
+code,
+.result__body {
+  font-family: ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace;
+  font-size: 0.875rem;
+  background: var(--debug-code-bg);
+  border-radius: 4px;
+}
+
+code {
+  padding: 0.125rem 0.375rem;
+  color: var(--debug-text);
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  background: var(--debug-primary);
+  color: var(--debug-on-primary);
+  border: none;
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: var(--debug-primary-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--debug-primary);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: progress;
+  }
+}
+
+.result:not(:empty) {
+  margin-top: 1.25rem;
+}
+
+.result__status {
+  font-weight: 600;
+
+  &--success {
+    color: var(--debug-success);
+  }
+
+  &--error {
+    color: var(--debug-error);
+  }
+}
+
+.result__meta {
+  color: var(--debug-muted);
+  font-weight: 400;
+}
+
+.result__body {
+  max-height: 16rem;
+  margin: 0.5rem 0 0;
+  padding: 0.75rem 1rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

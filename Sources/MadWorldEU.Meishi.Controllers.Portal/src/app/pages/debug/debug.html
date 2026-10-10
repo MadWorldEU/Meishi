@@ -1,0 +1,38 @@
+<main class="debug">
+  <header class="debug__header">
+    <h1 class="debug__title">Debug</h1>
+    <a class="debug__link" routerLink="/">&larr; Back to home</a>
+  </header>
+
+  <section class="card" aria-labelledby="ping-title">
+    <h2 id="ping-title" class="card__title">API ping</h2>
+    <p class="card__description">
+      Sends <code>GET {{ pingUrl }}</code> to check that the portal can reach the API.
+    </p>
+
+    <button class="button" type="button" [disabled]="state().status === 'loading'" (click)="ping()">
+      Send ping
+    </button>
+
+    <div class="result" aria-live="polite">
+      @let current = state();
+      @switch (current.status) {
+        @case ('loading') {
+          <p class="result__status">Waiting for response&hellip;</p>
+        }
+        @case ('success') {
+          <p class="result__status result__status--success">
+            Success <span class="result__meta">({{ current.durationMs }} ms)</span>
+          </p>
+          <pre class="result__body">{{ current.body }}</pre>
+        }
+        @case ('error') {
+          <p class="result__status result__status--error">{{ current.message }}</p>
+          @if (current.body) {
+            <pre class="result__body">{{ current.body }}</pre>
+          }
+        }
+      }
+    </div>
+  </section>
+</main>
