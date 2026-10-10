@@ -24,10 +24,11 @@ spec:
             - containerPort: {{ .Values.api.port }}
           env:
             # The Portal calls the API from the browser, so its origins must be allowed by CORS
-            - name: Cors__AllowedOrigins__0
-              value: "https://{{ .Values.ingress.domain }}"
-            - name: Cors__AllowedOrigins__1
-              value: "https://www.{{ .Values.ingress.domain }}"
+            {{- $portalOrigins := list (printf "https://%s" .Values.ingress.domain) (printf "https://www.%s" .Values.ingress.domain) }}
+            {{- range $index, $origin := concat $portalOrigins .Values.api.cors.extraAllowedOrigins }}
+            - name: Cors__AllowedOrigins__{{ $index }}
+              value: {{ $origin | quote }}
+            {{- end }}
           resources:
             requests:
               cpu: {{ .Values.api.resources.requests.cpu | quote }}
