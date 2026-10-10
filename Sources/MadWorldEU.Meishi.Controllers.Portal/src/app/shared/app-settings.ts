@@ -20,7 +20,11 @@ export class AppSettings {
   async load(): Promise<void> {
     try {
       const settings = await firstValueFrom(this.http.get<{ apiUrl?: string }>(SETTINGS_URL));
-      this.apiUrl = (settings?.apiUrl || DEFAULT_API_URL).replace(/\/+$/, '');
+      let apiUrl = settings?.apiUrl || DEFAULT_API_URL;
+      while (apiUrl.endsWith('/')) {
+        apiUrl = apiUrl.slice(0, -1);
+      }
+      this.apiUrl = apiUrl;
     } catch {
       this.apiUrl = DEFAULT_API_URL;
     }

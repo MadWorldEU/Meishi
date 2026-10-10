@@ -75,7 +75,7 @@ describe('Debug', () => {
     await fixture.whenStable();
 
     expect(status()?.classList).toContain('result__status--error');
-    expect(status()?.textContent).toContain('502 Bad Gateway');
+    expect(status()?.textContent).toContain('The API responded with status 502');
     expect(body()).toBeNull();
     expect(button().disabled).toBe(false);
   });

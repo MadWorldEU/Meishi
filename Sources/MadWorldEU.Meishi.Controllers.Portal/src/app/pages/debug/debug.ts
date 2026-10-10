@@ -43,7 +43,7 @@ export class Debug {
           message:
             error.status === 0
               ? 'Network error: the API could not be reached'
-              : `${error.status} ${error.statusText}`.trim(),
+              : `The API responded with status ${error.status}`,
         });
       },
     });
