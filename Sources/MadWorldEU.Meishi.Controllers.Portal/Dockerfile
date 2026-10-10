@@ -12,11 +12,21 @@ COPY ["Sources/MadWorldEU.Meishi.Controllers.Portal/src", "./src"]
 RUN npm run build
 
 FROM nginxinc/nginx-unprivileged:alpine AS final
-COPY <<'EOF' /etc/nginx/conf.d/default.conf
+# Public URL of the API, e.g. https://api.example.com. Set by the Helm chart.
+ENV API_HTTPS=""
+# The nginx entrypoint renders templates with envsubst; only defined environment variables are replaced.
+COPY <<'EOF' /etc/nginx/templates/default.conf.template
 server {
     listen 8080;
     root /usr/share/nginx/html;
     index index.html;
+
+    # Runtime settings for the Angular app (see app-settings.ts).
+    location = /config.json {
+        default_type application/json;
+        add_header Cache-Control "no-cache";
+        return 200 '{"apiUrl":"${API_HTTPS}"}';
+    }
 
     # Hashed bundles never change, so they can be cached forever.
     location ~* \.(?:js|css|woff2?|ico|png|svg|jpg|jpeg|webp)$ {

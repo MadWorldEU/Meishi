@@ -18,6 +18,9 @@ api:
   port: 8080
   image:
     repository: "ghcr.io/madworldeu/madworldeu-meishi-api"
+  cors:
+    # Origins that may call the API from a browser, on top of the Portal (https://<domain> and https://www.<domain>)
+    extraAllowedOrigins: []
   # ASP.NET Core needs more memory than Nginx for the runtime and GC heap
   resources:
     requests:

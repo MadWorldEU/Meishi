@@ -42,3 +42,6 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# The root .gitignore ignores .NET [Dd]ebug/ build folders; the debug page is source code.
+!/src/app/pages/debug/

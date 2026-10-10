@@ -48,6 +48,29 @@ Run from the root of the repository:
 helm upgrade --install meishi Deployments/VPS -f Deployments/VPS/values.yaml
 ```
 
+#### Use locally built images
+By default the chart pulls the released images from `ghcr.io`. To test your own changes, build the images locally. Run from the root of the repository:
+```shell
+docker build -f Sources/MadWorldEU.Meishi.Controllers.Api/Dockerfile -t localhost/meishi-api:local .
+docker build -f Sources/MadWorldEU.Meishi.Controllers.Portal/Dockerfile -t localhost/meishi-portal:local .
+```
+
+Install the chart with these images. Both images use the same tag, because the chart uses `appVersion` as the tag for the API and the Portal:
+```shell
+helm upgrade --install meishi Deployments/VPS -f Deployments/VPS/values.yaml \
+  --set appVersion=local \
+  --set api.image.repository=meishi-api \
+  --set portal.image.repository=meishi-portal
+```
+
+After rebuilding an image with the same tag, restart the deployments to pick it up:
+```shell
+kubectl rollout restart deployment/api deployment/portal -n meishi
+```
+
+> [!NOTE]
+> The cluster only sees local images when Docker Desktop uses the containerd image store. Go to Settings > General and enable "Use containerd for pulling and storing images", then build the images again. Without it the pods fail with `ImagePullBackOff` and a `pull access denied` error.
+
 #### Remove
 ```shell
 helm uninstall meishi .

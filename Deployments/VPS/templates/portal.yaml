@@ -22,6 +22,10 @@ spec:
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           ports:
             - containerPort: {{ .Values.portal.port }}
+          env:
+            # The Portal image serves this url to the Angular app as /config.json
+            - name: API_HTTPS
+              value: "https://api.{{ .Values.ingress.domain }}"
           resources:
             requests:
               cpu: {{ .Values.portal.resources.requests.cpu | quote }}
