@@ -111,7 +111,7 @@ npm ci
 npm start
 ```
 
-4. Open your browser and navigate to http://localhost:4200. The page reloads automatically when you change a source file. Without the AppHost, the Portal does not forward `/api` requests, so calls to the API do not work.
+4. Open your browser and navigate to http://localhost:4200. The page reloads automatically when you change a source file. Without the AppHost, the Portal forwards `/api` requests to http://localhost:5005, so start the API as well (see [API](#api)). You can check the connection on http://localhost:4200/debug.
 
 The Angular CLI is installed as a local dependency, so a global install is not required. Use `npx ng <command>` to run Angular CLI commands, for example `npx ng generate component my-component`.
 
