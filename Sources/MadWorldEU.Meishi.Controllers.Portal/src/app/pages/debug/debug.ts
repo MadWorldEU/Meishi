@@ -1,9 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
+import { AppSettings } from '../../shared/app-settings';
 
-/** The dev-server proxy (proxy.conf.js) forwards /api to the API. */
-export const PING_URL = '/api/debug/ping';
+export const PING_PATH = '/debug/ping';
 export const EXPECTED_PING_RESPONSE = 'pong';
 
 export type PingState =
@@ -21,14 +21,14 @@ export type PingState =
 export class Debug {
   private readonly http = inject(HttpClient);
 
-  protected readonly pingUrl = PING_URL;
+  protected readonly pingUrl = inject(AppSettings).apiUrl + PING_PATH;
   protected readonly state = signal<PingState>({ status: 'idle' });
 
   protected ping(): void {
     const startedAt = performance.now();
     this.state.set({ status: 'loading' });
 
-    this.http.get(PING_URL, { responseType: 'text' }).subscribe({
+    this.http.get(this.pingUrl, { responseType: 'text' }).subscribe({
       next: (body) => {
         // Anything else than "pong" (e.g. the SPA fallback page) did not come from the API.
         this.state.set(

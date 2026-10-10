@@ -2,7 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
-import { Debug, PING_URL } from './debug';
+import { AppSettings } from '../../shared/app-settings';
+import { Debug } from './debug';
+
+const PING_URL = 'https://api.example.com/debug/ping';
 
 describe('Debug', () => {
   let fixture: ComponentFixture<Debug>;
@@ -14,6 +17,7 @@ describe('Debug', () => {
       imports: [Debug],
       providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
+    TestBed.inject(AppSettings).apiUrl = 'https://api.example.com';
 
     fixture = TestBed.createComponent(Debug);
     http = TestBed.inject(HttpTestingController);
@@ -81,6 +85,10 @@ describe('Debug', () => {
     await fixture.whenStable();
 
     expect(status()?.textContent).toContain('Network error');
+  });
+
+  it('should show the url of the ping request', () => {
+    expect(compiled.querySelector('code')?.textContent).toBe(`GET ${PING_URL}`);
   });
 
   it('should link back to the home page', () => {
