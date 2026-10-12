@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- A business card (meishi) drawn as a terminal window with a prompt. -->
+  <rect x="2" y="6" width="28" height="20" rx="3" fill="#08120a" stroke="#33ff66" stroke-width="2"/>
+  <path d="M8 12l5 4-5 4" fill="none" stroke="#33ff66" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="16" y="18.5" width="8" height="2.5" rx="1" fill="#ffcc33"/>
+</svg>

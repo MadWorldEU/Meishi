@@ -52,6 +52,21 @@ describe('Home', () => {
     expect(compiled.querySelector('.loader')).toBeNull();
   });
 
+  it('should show the full name in the browser tab', async () => {
+    curriculumVitaeRequest().flush({ firstName: 'Jane', lastName: 'Roe' });
+    await fixture.whenStable();
+
+    expect(document.title).toBe('Jane Roe · CV');
+  });
+
+  it('should not change the browser tab title when the API fails', async () => {
+    document.title = 'CV';
+    curriculumVitaeRequest().error(new ProgressEvent('error'));
+    await fixture.whenStable();
+
+    expect(document.title).toBe('CV');
+  });
+
   it('should show an error when the response has no name', async () => {
     curriculumVitaeRequest().flush('<!doctype html>');
     await fixture.whenStable();
