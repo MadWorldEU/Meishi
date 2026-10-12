@@ -23,5 +23,14 @@ public sealed class CurriculaVitaeEndpointsTests(WebApplicationFactory<Program> 
         Assert.NotNull(body);
         Assert.False(string.IsNullOrWhiteSpace(body.FirstName));
         Assert.False(string.IsNullOrWhiteSpace(body.LastName));
+        Assert.False(string.IsNullOrWhiteSpace(body.Role));
+        Assert.False(string.IsNullOrWhiteSpace(body.Location));
+        Assert.False(string.IsNullOrWhiteSpace(body.About));
+        Assert.All(body.Experience, experience => Assert.NotEmpty(experience.Highlights));
+        Assert.NotEmpty(body.Experience);
+        Assert.NotEmpty(body.Education);
+        Assert.All(body.Skills, skillGroup => Assert.All(skillGroup.Skills, skill => Assert.InRange(skill.Level, 0, 10)));
+        Assert.NotEmpty(body.Skills);
+        Assert.NotEmpty(body.Contact);
     }
 }
