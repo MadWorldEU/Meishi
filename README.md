@@ -12,5 +12,10 @@ The full documentation is available at [madworldeu.github.io/Meishi](https://mad
 
 To build and run Meishi on your own machine, follow the [Setup Development Environment](https://madworldeu.github.io/Meishi/DeveloperGuides/SetupDevEnvironment.html) guide.
 
+## Acknowledgements
+Thanks to the open-source projects Meishi builds on:
+
+- [Mediator](https://github.com/martinothamar/Mediator) by Martin Othamar – a source-generated mediator implementation for .NET.
+
 ## License
 MIT © Oscar Veldman
