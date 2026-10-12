@@ -62,6 +62,56 @@
   border-bottom: 1px dashed var(--green-faint);
 }
 
+// Shown instead of the sections while the CV is being fetched from the API.
+.loader {
+  display: flex;
+  gap: 1ch;
+}
+
+// A one-character window that steps through the frames | / - \.
+.loader__spinner {
+  width: 1ch;
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--amber);
+  text-shadow: 0 0 6px rgb(255 204 51 / 45%);
+
+  span {
+    display: inline-block;
+    animation: spin 0.6s steps(4) infinite;
+  }
+}
+
+// Trailing dots that are typed out one by one.
+.loader__dots::after {
+  content: '...';
+  display: inline-block;
+  width: 3ch;
+  overflow: hidden;
+  vertical-align: bottom;
+  white-space: nowrap;
+  animation: dots 1.2s steps(4, jump-none) infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: translateX(-4ch);
+  }
+}
+
+@keyframes dots {
+  from {
+    width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader__spinner span,
+  .loader__dots::after {
+    animation: none;
+  }
+}
+
 .block {
   margin-bottom: 2.25rem;
   scroll-margin-top: 1rem;
