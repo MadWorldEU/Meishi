@@ -16,7 +16,20 @@
         <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
         <span class="prompt__command">whoami</span>
       </p>
-      <h1 class="name">{{ cv.name }}</h1>
+      <div aria-live="polite">
+        @let current = name();
+        @switch (current.status) {
+          @case ('loading') {
+            <p class="muted">loading&hellip;</p>
+          }
+          @case ('success') {
+            <h1 class="name">{{ current.name }}</h1>
+          }
+          @case ('error') {
+            <p class="accent">whoami: {{ current.message }}</p>
+          }
+        }
+      </div>
       <p>
         <span class="accent">&gt;</span> {{ cv.role }}
         <span class="muted">// {{ cv.location }}</span>

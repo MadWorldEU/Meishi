@@ -1,20 +1,32 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { AppSettings } from '../../shared/app-settings';
 import { Home } from './home';
 import { CV } from '../../cv';
+
+const CURRICULUM_VITAE_URL = 'https://api.example.com/curricula-vitae';
 
 describe('Home', () => {
   let fixture: ComponentFixture<Home>;
   let compiled: HTMLElement;
+  let http: HttpTestingController;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Home],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
+    TestBed.inject(AppSettings).apiUrl = 'https://api.example.com';
 
     fixture = TestBed.createComponent(Home);
+    http = TestBed.inject(HttpTestingController);
     await fixture.whenStable();
     compiled = fixture.nativeElement as HTMLElement;
   });
+
+  const curriculumVitaeRequest = () => http.expectOne({ method: 'GET', url: CURRICULUM_VITAE_URL });
+  const header = () => compiled.querySelector('header');
 
   const texts = (selector: string): string[] =>
     Array.from(compiled.querySelectorAll(selector), (element) => element.textContent?.trim() ?? '');
@@ -23,14 +35,44 @@ describe('Home', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should render the name', () => {
-    expect(compiled.querySelector('h1')?.textContent).toContain(CV.name);
+  it('should show a loading state while waiting for the API', () => {
+    expect(header()?.textContent).toContain('loading');
+    expect(compiled.querySelector('h1')).toBeNull();
+  });
+
+  it('should render the full name from the API', async () => {
+    curriculumVitaeRequest().flush({ firstName: 'Jane', lastName: 'Roe' });
+    await fixture.whenStable();
+
+    expect(compiled.querySelector('h1')?.textContent).toBe('Jane Roe');
+    expect(header()?.textContent).not.toContain('loading');
+  });
+
+  it('should show an error when the response has no name', async () => {
+    curriculumVitaeRequest().flush('<!doctype html>');
+    await fixture.whenStable();
+
+    expect(header()?.textContent).toContain('whoami: unexpected response from the API');
+    expect(compiled.querySelector('h1')).toBeNull();
+  });
+
+  it('should show the status when the API returns an error', async () => {
+    curriculumVitaeRequest().flush('', { status: 502, statusText: 'Bad Gateway' });
+    await fixture.whenStable();
+
+    expect(header()?.textContent).toContain('whoami: the API responded with status 502');
+  });
+
+  it('should show a network error when the API cannot be reached', async () => {
+    curriculumVitaeRequest().error(new ProgressEvent('error'));
+    await fixture.whenStable();
+
+    expect(header()?.textContent).toContain('whoami: the API could not be reached');
   });
 
   it('should render the role and location', () => {
-    const header = compiled.querySelector('header')?.textContent;
-    expect(header).toContain(CV.role);
-    expect(header).toContain(CV.location);
+    expect(header()?.textContent).toContain(CV.role);
+    expect(header()?.textContent).toContain(CV.location);
   });
 
   it('should render a navigation link for every section', () => {
@@ -113,7 +155,14 @@ describe('Home.bar', () => {
     }
   }
 
-  const app = new TestableHome();
+  let app: TestableHome;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
+    app = TestBed.runInInjectionContext(() => new TestableHome());
+  });
 
   it.each([
     [0, '[----------]'],
