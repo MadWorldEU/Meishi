@@ -1,5 +1,7 @@
 using MadWorldEU.Meishi.Endpoints;
+using Mediator;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,16 +17,22 @@ builder.Services.AddOptions<CorsOptions>().Configure<IConfiguration>((options, c
     options.AddDefaultPolicy(policy => policy.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod());
 });
 
+// The source generator finds messages and handlers in this project and in every referenced project that uses Mediator.
+builder.Services.AddMediator((MediatorOptions options) =>
+{
+    options.ServiceLifetime = ServiceLifetime.Scoped;
+    options.GenerateTypesAsInternal = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+app.MapOpenApi();
+app.MapScalarApiReference();
 
 app.UseCors();
 
+app.AddCurriculaVitaeEndpoints();
 app.AddDebugEndpoints();
 
 await app.RunAsync();
