@@ -2,7 +2,6 @@ import { CV } from './cv';
 
 describe('CV', () => {
   it('should have the header fields filled in', () => {
-    expect(CV.name.trim()).not.toBe('');
     expect(CV.role.trim()).not.toBe('');
     expect(CV.location.trim()).not.toBe('');
     expect(CV.about.trim()).not.toBe('');

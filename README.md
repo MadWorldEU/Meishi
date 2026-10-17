@@ -1,3 +1,4 @@
+[![GitHub](https://img.shields.io/github/license/MadWorldEU/Meishi?style=flat-square)](https://github.com/MadWorldEU/Meishi/blob/main/LICENSE)
 [![Quality gate status](https://sonarcloud.io/api/project_badges/measure?project=MadWorldEU_Meishi&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=MadWorldEU_Meishi)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=MadWorldEU_Meishi&metric=coverage)](https://sonarcloud.io/summary/new_code?id=MadWorldEU_Meishi)
 [![Deployed version](https://img.shields.io/github/v/tag/MadWorldEU/Meishi?sort=semver&label=deployed)](https://github.com/MadWorldEU/Meishi/tags)
@@ -10,6 +11,11 @@ Meishi (名刺) – my digital business card. Personal portfolio and CV of a sof
 The full documentation is available at [madworldeu.github.io/Meishi](https://madworldeu.github.io/Meishi/).
 
 To build and run Meishi on your own machine, follow the [Setup Development Environment](https://madworldeu.github.io/Meishi/DeveloperGuides/SetupDevEnvironment.html) guide.
+
+## Acknowledgements
+Thanks to the open-source projects Meishi builds on:
+
+- [Mediator](https://github.com/martinothamar/Mediator) by Martin Othamar – a source-generated mediator implementation for .NET.
 
 ## License
 MIT © Oscar Veldman

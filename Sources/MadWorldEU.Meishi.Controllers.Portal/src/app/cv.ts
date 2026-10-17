@@ -22,9 +22,8 @@ export interface ContactLink {
   href: string;
 }
 
-// Placeholder content: replace with your own details.
+// Placeholder content: replace with your own details. The name is served by the API.
 export const CV = {
-  name: 'Your Name',
   role: 'Software Engineer',
   location: 'The Netherlands',
   about:

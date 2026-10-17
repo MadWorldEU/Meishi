@@ -5,116 +5,135 @@
   </div>
 
   <div class="terminal__body">
-    <nav class="nav" aria-label="Sections">
-      @for (section of sections; track section) {
-        <a [href]="'#' + section">./{{ section }}</a>
-      }
-    </nav>
-
-    <header class="block">
+    @let current = name();
+    @if (current.status === 'loading') {
       <p class="prompt">
         <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
-        <span class="prompt__command">whoami</span>
+        <span class="prompt__command">curl -s /curricula-vitae</span>
       </p>
-      <h1 class="name">{{ cv.name }}</h1>
-      <p>
-        <span class="accent">&gt;</span> {{ cv.role }}
-        <span class="muted">// {{ cv.location }}</span>
+      <p class="loader" role="status">
+        <span class="loader__spinner" aria-hidden="true"><span>|/-\</span></span>
+        <span>fetching curriculum vitae<span class="loader__dots" aria-hidden="true"></span></span>
       </p>
-    </header>
+    } @else {
+      <nav class="nav" aria-label="Sections">
+        @for (section of sections; track section) {
+          <a [href]="'#' + section">./{{ section }}</a>
+        }
+      </nav>
 
-    <section id="about" class="block">
-      <p class="prompt">
-        <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
-        <span class="prompt__command">cat about.txt</span>
-      </p>
-      <p class="indent">{{ cv.about }}</p>
-    </section>
+      <header class="block">
+        <p class="prompt">
+          <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
+          <span class="prompt__command">whoami</span>
+        </p>
+        @switch (current.status) {
+          @case ('success') {
+            <h1 class="name">{{ current.name }}</h1>
+          }
+          @case ('error') {
+            <p class="accent">whoami: {{ current.message }}</p>
+          }
+        }
+        <p>
+          <span class="accent">&gt;</span> {{ cv.role }}
+          <span class="muted">// {{ cv.location }}</span>
+        </p>
+      </header>
 
-    <section id="experience" class="block">
-      <p class="prompt">
-        <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
-        <span class="prompt__command">ls -l ~/experience</span>
-      </p>
-      <ul class="entries">
-        @for (job of cv.experience; track job.company + job.period) {
-          <li class="entry">
-            <div class="entry__head">
-              <span class="muted">drwxr-xr-x</span>
-              <span class="accent">{{ job.period }}</span>
-              <h2 class="entry__title">{{ job.role }} &#64; {{ job.company }}</h2>
+      <section id="about" class="block">
+        <p class="prompt">
+          <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
+          <span class="prompt__command">cat about.txt</span>
+        </p>
+        <p class="indent">{{ cv.about }}</p>
+      </section>
+
+      <section id="experience" class="block">
+        <p class="prompt">
+          <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
+          <span class="prompt__command">ls -l ~/experience</span>
+        </p>
+        <ul class="entries">
+          @for (job of cv.experience; track job.company + job.period) {
+            <li class="entry">
+              <div class="entry__head">
+                <span class="muted">drwxr-xr-x</span>
+                <span class="accent">{{ job.period }}</span>
+                <h2 class="entry__title">{{ job.role }} &#64; {{ job.company }}</h2>
+              </div>
+              <ul class="entry__list">
+                @for (highlight of job.highlights; track highlight) {
+                  <li>{{ highlight }}</li>
+                }
+              </ul>
+            </li>
+          }
+        </ul>
+      </section>
+
+      <section id="education" class="block">
+        <p class="prompt">
+          <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
+          <span class="prompt__command">cat education.log</span>
+        </p>
+        <ul class="entries">
+          @for (item of cv.education; track item.degree) {
+            <li class="entry__head">
+              <span class="accent">{{ item.period }}</span>
+              <h2 class="entry__title">{{ item.degree }}</h2>
+              <span class="muted">{{ item.school }}</span>
+            </li>
+          }
+        </ul>
+      </section>
+
+      <section id="skills" class="block">
+        <p class="prompt">
+          <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
+          <span class="prompt__command">skills --list</span>
+        </p>
+        <div class="skills">
+          @for (group of cv.skills; track group.name) {
+            <div>
+              <h2 class="skills__group"># {{ group.name }}</h2>
+              <dl>
+                @for (skill of group.skills; track skill.name) {
+                  <div class="skill">
+                    <dt>{{ skill.name }}</dt>
+                    <dd>
+                      <span class="skill__bar" aria-hidden="true">{{ bar(skill.level) }}</span>
+                      <span class="muted">{{ skill.level }}/10</span>
+                    </dd>
+                  </div>
+                }
+              </dl>
             </div>
-            <ul class="entry__list">
-              @for (highlight of job.highlights; track highlight) {
-                <li>{{ highlight }}</li>
-              }
-            </ul>
-          </li>
-        }
-      </ul>
-    </section>
+          }
+        </div>
+      </section>
 
-    <section id="education" class="block">
+      <section id="contact" class="block">
+        <p class="prompt">
+          <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
+          <span class="prompt__command">contact</span>
+        </p>
+        <dl class="contact">
+          @for (link of cv.contact; track link.label) {
+            <div class="contact__row">
+              <dt class="muted">{{ link.label }}:</dt>
+              <dd>
+                <a [href]="link.href">{{ link.value }}</a>
+              </dd>
+            </div>
+          }
+        </dl>
+      </section>
+
       <p class="prompt">
         <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
-        <span class="prompt__command">cat education.log</span>
+        <span class="cursor" aria-hidden="true"></span>
       </p>
-      <ul class="entries">
-        @for (item of cv.education; track item.degree) {
-          <li class="entry__head">
-            <span class="accent">{{ item.period }}</span>
-            <h2 class="entry__title">{{ item.degree }}</h2>
-            <span class="muted">{{ item.school }}</span>
-          </li>
-        }
-      </ul>
-    </section>
-
-    <section id="skills" class="block">
-      <p class="prompt">
-        <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
-        <span class="prompt__command">skills --list</span>
-      </p>
-      <div class="skills">
-        @for (group of cv.skills; track group.name) {
-          <div>
-            <h2 class="skills__group"># {{ group.name }}</h2>
-            <dl>
-              @for (skill of group.skills; track skill.name) {
-                <div class="skill">
-                  <dt>{{ skill.name }}</dt>
-                  <dd>
-                    <span class="skill__bar" aria-hidden="true">{{ bar(skill.level) }}</span>
-                    <span class="muted">{{ skill.level }}/10</span>
-                  </dd>
-                </div>
-              }
-            </dl>
-          </div>
-        }
-      </div>
-    </section>
-
-    <section id="contact" class="block">
-      <p class="prompt">
-        <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
-        <span class="prompt__command">contact</span>
-      </p>
-      <dl class="contact">
-        @for (link of cv.contact; track link.label) {
-          <div class="contact__row">
-            <dt class="muted">{{ link.label }}:</dt>
-            <dd>
-              <a [href]="link.href">{{ link.value }}</a>
-            </dd>
-          </div>
-        }
-      </dl>
-    </section>
-
-    <p class="prompt">
-      <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
-      <span class="cursor" aria-hidden="true"></span>
-    </p>
+    }
   </div>
 </main>

@@ -26,11 +26,13 @@ describe('App', () => {
     const harness = await RouterTestingHarness.create();
 
     expect(await harness.navigateByUrl('/')).toBeInstanceOf(Home);
+    expect(document.title).toBe('CV');
   });
 
   it('should show the debug page on /debug', async () => {
     const harness = await RouterTestingHarness.create();
 
     expect(await harness.navigateByUrl('/debug')).toBeInstanceOf(Debug);
+    expect(document.title).toBe('Debug');
   });
 });
