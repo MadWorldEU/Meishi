@@ -1,16 +1,19 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.1.0">
+<Project Sdk="Aspire.AppHost.Sdk/13.6.1">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <UserSecretsId>c6d55534-dbbc-4425-8846-d24cc6c31f83</UserSecretsId>
+        <AspireUseCliBundle>true</AspireUseCliBundle>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Aspire.Hosting.JavaScript" />
+      <PackageReference Include="Aspire.Hosting.PostgreSQL" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\MadWorldEU.Meishi.Controllers.Api\Api.csproj" />
+      <ProjectReference Include="..\MadWorldEU.Meishi.Controllers.MigrationService\MigrationService.csproj" />
     </ItemGroup>
 
 </Project>

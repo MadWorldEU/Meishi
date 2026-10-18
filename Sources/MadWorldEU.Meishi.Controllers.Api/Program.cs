@@ -1,4 +1,5 @@
 using MadWorldEU.Meishi.Endpoints;
+using MadWorldEU.Meishi.Extensions;
 using Mediator;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Scalar.AspNetCore;
@@ -16,6 +17,8 @@ builder.Services.AddOptions<CorsOptions>().Configure<IConfiguration>((options, c
     var allowedOrigins = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
     options.AddDefaultPolicy(policy => policy.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod());
 });
+
+builder.Services.AddPostgresql(builder.Configuration);
 
 // The source generator finds messages and handlers in this project and in every referenced project that uses Mediator.
 builder.Services.AddMediator((MediatorOptions options) =>

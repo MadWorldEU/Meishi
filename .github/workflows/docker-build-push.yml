@@ -19,6 +19,9 @@ jobs:
           - name: API
             dockerfile: Sources/MadWorldEU.Meishi.Controllers.Api/Dockerfile
             image: madworldeu-meishi-api
+          - name: Migration Service
+            dockerfile: Sources/MadWorldEU.Meishi.Controllers.MigrationService/Dockerfile
+            image: madworldeu-meishi-migration-service
           - name: Portal
             dockerfile: Sources/MadWorldEU.Meishi.Controllers.Portal/Dockerfile
             image: madworldeu-meishi-portal

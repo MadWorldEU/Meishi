@@ -12,6 +12,7 @@ This guide explains what you need to install to build and run both projects on y
 | Tool                                                          | Version                                 | Needed for                                      |
 |---------------------------------------------------------------|-----------------------------------------|-------------------------------------------------|
 | [.NET SDK](https://dotnet.microsoft.com/download/dotnet/10.0) | 10.0                                    | API and AppHost                                 |
+| [Aspire CLI](https://aspire.dev/get-started/install-cli/)     | 13.6.1, same as `Aspire.AppHost.Sdk`    | AppHost                                         |
 | [Node.js](https://nodejs.org/)                                | 22.22.3+, 24.15.0+ or 26+               | Portal                                          |
 | npm                                                           | Comes with Node.js                      | Portal                                          |
 | [Docker](https://docs.docker.com/get-started/get-docker/)     | Any recent version                      | Optional, only to build the API container image |
@@ -43,16 +44,30 @@ dotnet dev-certs https --trust
 dotnet restore Meishi.slnx
 ```
 
-4. Start the AppHost. This starts the API, the Portal and the Aspire dashboard. Node.js must be installed first (see [Portal](#portal), step 1), because the AppHost starts the Portal with `npm`:
+4. Install the Aspire CLI and check the version. The AppHost uses the dashboard and orchestrator that come with the CLI (`AspireUseCliBundle` is `true`), so it does not build without it:
+
+```bash
+# Linux and macOS
+curl -sSL https://aspire.dev/install.sh | bash
+
+# Windows (PowerShell)
+irm https://aspire.dev/install.ps1 | iex
+
+aspire --version
+```
+
+Use the same version as the `Aspire.AppHost.Sdk` version in `Sources/MadWorldEU.Meishi.AppHost/AppHost.csproj`. Restart your terminal (and IDE) after installing, so `aspire` is on your `PATH`. To update later, run `aspire update --self`.
+
+5. Start the AppHost. This starts the API, the Portal and the Aspire dashboard. Node.js must be installed first (see [Portal](#portal), step 1), because the AppHost starts the Portal with `npm`:
 
 ```bash
 dotnet run --project Sources/MadWorldEU.Meishi.AppHost
 ```
 
-5. The Aspire dashboard opens at https://localhost:17268. From there you can open the API and the Portal, and view their logs and traces. The AppHost waits until the API is running before it starts the Portal, and gives the Portal a port of its own, so use the Portal link in the dashboard instead of http://localhost:4200. Requests from the Portal to `/api` are forwarded to the API.
+6. The Aspire dashboard opens at https://localhost:17268. From there you can open the API and the Portal, and view their logs and traces. The AppHost waits until the API is running before it starts the Portal, and gives the Portal a port of its own, so use the Portal link in the dashboard instead of http://localhost:4200. Requests from the Portal to `/api` are forwarded to the API.
 
 > [!NOTE]
-> Aspire does not need a separate workload. The AppHost uses the `Aspire.AppHost.Sdk`, which is restored from NuGet.
+> Aspire does not need a separate .NET workload. The AppHost uses the `Aspire.AppHost.Sdk`, which is restored from NuGet, together with the Aspire CLI from step 4.
 
 To run the API without Aspire, start the project directly. The API is then available at http://localhost:5005:
 

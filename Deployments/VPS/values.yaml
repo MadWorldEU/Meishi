@@ -48,3 +48,67 @@ portal:
       cpu: "200m"
       memory: "128Mi"
       ephemeral-storage: "256Mi"
+
+postgres:
+  name: postgres
+  port: 5432
+  image:
+    # Same major version as the integration tests
+    repository: "postgres"
+    tag: "17"
+  username: "meishi"
+  # Demo password for local development only. Production overrides it with --set postgres.password=...
+  # from the POSTGRES_PASSWORD secret in the deploy workflow.
+  password: "meishi-local-dev"
+  # Same name as the database in the Aspire AppHost
+  database: "meishi-db"
+  storageSize: "1Gi"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+      ephemeral-storage: "64Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+      ephemeral-storage: "256Mi"
+
+migrationService:
+  name: migration-service
+  image:
+    repository: "ghcr.io/madworldeu/madworldeu-meishi-migration-service"
+  # Retries before the deployment fails, for example when the database is restarting
+  backoffLimit: 3
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "64Mi"
+      ephemeral-storage: "64Mi"
+    limits:
+      cpu: "500m"
+      memory: "256Mi"
+      ephemeral-storage: "256Mi"
+
+# Exposed through the ingress on pgadmin.<ingress.domain>
+pgadmin:
+  name: pgadmin
+  port: 8080
+  image:
+    repository: "dpage/pgadmin4"
+    tag: "9.18"
+  # Demo login for local development only. Production overrides it with --set pgadmin.email=...
+  # from the PGADMIN_EMAIL secret in the deploy workflow.
+  email: "admin@meishi.dev"
+  # Demo password for local development only. Production overrides it with --set pgadmin.password=...
+  # from the PGADMIN_PASSWORD secret in the deploy workflow.
+  password: "meishi-local-dev"
+  # pgAdmin is a Python web app and needs more memory than the other services
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "256Mi"
+      ephemeral-storage: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+      ephemeral-storage: "512Mi"

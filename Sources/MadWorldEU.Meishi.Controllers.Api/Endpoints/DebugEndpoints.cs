@@ -9,6 +9,12 @@ public static class DebugEndpoints
             var debugEndpoints = app.MapGroup("/debug");
             
             debugEndpoints.MapGet("/ping", () => "pong");
+
+            // Returns 200 when the API can connect to the database, and 503 when it cannot
+            debugEndpoints.MapGet("/database", async (MeishiContext context, CancellationToken cancellationToken) =>
+                await context.Database.CanConnectAsync(cancellationToken)
+                    ? Results.Text("online")
+                    : Results.Text("offline", statusCode: StatusCodes.Status503ServiceUnavailable));
         }
     }
 }

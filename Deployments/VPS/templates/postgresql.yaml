@@ -1,0 +1,161 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.postgres.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.postgres.name }}
+type: Opaque
+stringData:
+  POSTGRES_USER: {{ .Values.postgres.username | quote }}
+  POSTGRES_PASSWORD: {{ .Values.postgres.password | quote }}
+  POSTGRES_DB: {{ .Values.postgres.database | quote }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.postgres.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.postgres.name }}
+spec:
+  serviceName: {{ .Values.postgres.name }}
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.postgres.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.postgres.name }}
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: {{ .Values.postgres.name }}
+          image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.postgres.port }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.postgres.name }}
+          env:
+            # A subdirectory, because the root of a volume can contain files (lost+found) that make initdb fail
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          livenessProbe:
+            exec:
+              command: ["sh", "-c", "pg_isready -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\""]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "pg_isready -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\""]
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: {{ .Values.postgres.resources.requests.cpu | quote }}
+              memory: {{ .Values.postgres.resources.requests.memory | quote }}
+              ephemeral-storage: {{ index .Values.postgres.resources.requests "ephemeral-storage" | quote }}
+            limits:
+              cpu: {{ .Values.postgres.resources.limits.cpu | quote }}
+              memory: {{ .Values.postgres.resources.limits.memory | quote }}
+              ephemeral-storage: {{ index .Values.postgres.resources.limits "ephemeral-storage" | quote }}
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.postgres.storageSize | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.postgres.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.postgres.name }}
+spec:
+  selector:
+    app: {{ .Values.postgres.name }}
+  ports:
+    - port: {{ .Values.postgres.port }}
+      targetPort: {{ .Values.postgres.port }}
+      protocol: TCP
+---
+# Connection string for the .NET services, in the format of IConfiguration (ConnectionStrings:meishi-db)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.postgres.name }}-connection
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.postgres.name }}
+type: Opaque
+stringData:
+  ConnectionStrings__meishi-db: {{ printf "Host=%s;Port=%v;Database=%s;Username=%s;Password=\"%s\"" .Values.postgres.name .Values.postgres.port .Values.postgres.database .Values.postgres.username (replace "\"" "\"\"" .Values.postgres.password) | quote }}
+---
+# Applies the EF Core migrations once per install or upgrade.
+# As a post-install/post-upgrade hook it runs after the database is created, and Helm waits for it to succeed;
+# a failed migration fails the deployment.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.migrationService.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.migrationService.name }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    # Keep the finished job (and its logs) until the next deployment replaces it
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: {{ .Values.migrationService.backoffLimit }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.migrationService.name }}
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      initContainers:
+        # Waits until PostgreSQL accepts connections before the migrations start
+        - name: wait-for-postgres
+          image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          command:
+            - sh
+            - -c
+            - until pg_isready -h {{ .Values.postgres.name }} -p {{ .Values.postgres.port }} -U {{ .Values.postgres.username }} -d {{ .Values.postgres.database }}; do echo "Waiting for PostgreSQL..."; sleep 2; done
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "16Mi"
+              ephemeral-storage: "16Mi"
+            limits:
+              cpu: "100m"
+              memory: "64Mi"
+              ephemeral-storage: "64Mi"
+      containers:
+        - name: {{ .Values.migrationService.name }}
+          image: "{{ .Values.migrationService.image.repository }}:{{ .Values.appVersion }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.postgres.name }}-connection
+          resources:
+            requests:
+              cpu: {{ .Values.migrationService.resources.requests.cpu | quote }}
+              memory: {{ .Values.migrationService.resources.requests.memory | quote }}
+              ephemeral-storage: {{ index .Values.migrationService.resources.requests "ephemeral-storage" | quote }}
+            limits:
+              cpu: {{ .Values.migrationService.resources.limits.cpu | quote }}
+              memory: {{ .Values.migrationService.resources.limits.memory | quote }}
+              ephemeral-storage: {{ index .Values.migrationService.resources.limits "ephemeral-storage" | quote }}
