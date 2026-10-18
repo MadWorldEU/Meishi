@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide covers the DNS records required to deploy Byakko to a production environment. All subdomains point to the public IP of the Kubernetes node running Traefik.
+This guide covers the DNS records required to deploy Meishi to a production environment. All subdomains point to the public IP of the Kubernetes node running Traefik.
 
 ## Required DNS Records
 
@@ -13,6 +13,7 @@ Configure the following A records, replacing `<cluster-ip>` with the public IP o
 | `example.com`                | Portal (public-facing UI)            |
 | `www.example.com`            | Portal WWW alias                     |
 | `api.example.com`            | REST API                             |
+| `pgadmin.example.com`        | pgAdmin (database management)        |
 
 ## Simplified Configuration Using Wildcard Records
 

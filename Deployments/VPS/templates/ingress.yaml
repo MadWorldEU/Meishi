@@ -14,8 +14,19 @@ spec:
       hosts:
           - {{ .Values.ingress.domain }}
           - api.{{ .Values.ingress.domain }}
+          - pgadmin.{{ .Values.ingress.domain }}
           - www.{{ .Values.ingress.domain }}
   rules:
+      - host: {{ .Values.ingress.domain }}
+        http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: {{ .Values.portal.name }}
+                  port:
+                    number: {{ .Values.portal.port }}
       - host: api.{{ .Values.ingress.domain }}
         http:
           paths:
@@ -26,17 +37,17 @@ spec:
                   name: {{ .Values.api.name }}
                   port:
                     number: {{ .Values.api.port }}
-      - host: www.{{ .Values.ingress.domain }}
+      - host: pgadmin.{{ .Values.ingress.domain }}
         http:
           paths:
             - path: /
               pathType: Prefix
               backend:
                 service:
-                  name: {{ .Values.portal.name }}
+                  name: {{ .Values.pgadmin.name }}
                   port:
-                    number: {{ .Values.portal.port }}
-      - host: {{ .Values.ingress.domain }}
+                    number: {{ .Values.pgadmin.port }}
+      - host: www.{{ .Values.ingress.domain }}
         http:
           paths:
             - path: /

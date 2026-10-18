@@ -73,7 +73,7 @@ postgres:
       memory: "512Mi"
       ephemeral-storage: "256Mi"
 
-# Not exposed through the ingress; open it with: kubectl port-forward -n meishi svc/pgadmin 8081:8080
+# Exposed through the ingress on pgadmin.<ingress.domain>
 pgadmin:
   name: pgadmin
   port: 8080
