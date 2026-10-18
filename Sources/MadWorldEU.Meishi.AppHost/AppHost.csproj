@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MadWorldEU.Meishi.Controllers.Api\Api.csproj" />
+      <ProjectReference Include="..\MadWorldEU.Meishi.Controllers.MigrationService\MigrationService.csproj" />
     </ItemGroup>
 
 </Project>

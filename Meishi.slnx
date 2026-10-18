@@ -20,6 +20,7 @@
   <Folder Name="/Sources/Controllers/">
     <Project Path="Sources/MadWorldEU.Meishi.Controllers.Portal/Portal.csproj" />
     <Project Path="Sources\MadWorldEU.Meishi.Controllers.Api\Api.csproj" />
+    <Project Path="Sources\MadWorldEU.Meishi.Controllers.MigrationService\MigrationService.csproj" />
   </Folder>
   <Folder Name="/Sources/Core/">
     <Project Path="Sources\MadWorldEU.Meishi.Core.Application\Application.csproj" />

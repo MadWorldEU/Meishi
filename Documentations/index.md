@@ -14,8 +14,9 @@ Meishi is built with .NET 10 and Angular 22, stores its data in PostgreSQL, and 
 
 | Project                                              | Description                                                                        |
 | ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `MadWorldEU.Meishi.AppHost`                          | Aspire AppHost that wires up and runs PostgreSQL, the API and the portal locally.  |
+| `MadWorldEU.Meishi.AppHost`                          | Aspire AppHost that runs PostgreSQL, the migrations, the API and the portal.       |
 | `MadWorldEU.Meishi.Controllers.Api`                  | ASP.NET Core Web API that serves the Meishi backend.                               |
+| `MadWorldEU.Meishi.Controllers.MigrationService`     | Worker that applies the EF Core migrations on startup, before the API starts.      |
 | `MadWorldEU.Meishi.Controllers.Portal`               | Angular frontend of Meishi, served by nginx in production.                         |
 | `MadWorldEU.Meishi.Core.Application`                 | Application layer with the use cases that the API calls.                           |
 | `MadWorldEU.Meishi.Core.Contracts`                   | Request and response models shared between the API and its clients.                |

@@ -2,6 +2,9 @@
 
 PostgreSQL is used as the database, accessed via EF Core with Npgsql. The `MeishiContext` is the single DbContext for the application (defined in `MadWorldEU.Meishi.Infrastructures.Database`; migrations live in `MadWorldEU.Meishi.Infrastructures.Postgresql`). Connection is configured via the `meishi-db` connection string, which Aspire overrides automatically at runtime.
 
+## Automatic migrations
+When you run the solution with Aspire, the `MadWorldEU.Meishi.Controllers.MigrationService` project applies all pending migrations to the database and then exits. The AppHost waits for it to finish (`WaitForCompletion`), so the API only starts once the database is up to date. If a migration fails, the service exits with code 1 and the API is not started; check the `MigrationService` logs in the Aspire dashboard.
+
 ## Migrations
 This guide outlines how to manage database migrations using Entity Framework Core in the Meishi project.
 

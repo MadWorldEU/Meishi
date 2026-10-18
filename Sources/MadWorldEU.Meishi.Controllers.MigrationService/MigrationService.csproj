@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <AssemblyName>MadWorldEU.Meishi.MigrationService</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Hosting" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MadWorldEU.Meishi.Infrastructures.Postgresql\Postgresql.csproj" />
+    </ItemGroup>
+
+</Project>
