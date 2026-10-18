@@ -6,7 +6,8 @@ public static class DebugEndpoints
     {
         public void AddDebugEndpoints()
         {
-            var debugEndpoints = app.MapGroup("/debug");
+            var debugEndpoints = app.MapGroup("/debug")
+                .WithTags("Debug");
             
             debugEndpoints.MapGet("/ping", () => "pong");
 

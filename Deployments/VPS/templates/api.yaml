@@ -27,9 +27,10 @@ spec:
             - secretRef:
                 name: {{ .Values.postgres.name }}-connection
           env:
-            # The Portal calls the API from the browser, so its origins must be allowed by CORS
-            {{- $portalOrigins := list (printf "https://%s" .Values.ingress.domain) (printf "https://www.%s" .Values.ingress.domain) }}
-            {{- range $index, $origin := concat $portalOrigins .Values.api.cors.extraAllowedOrigins }}
+            # The Portal calls the API from the browser, so its origins must be allowed by CORS.
+            # The API's own origin is allowed too, for browser tools served from the API itself (such as API docs).
+            {{- $defaultOrigins := list (printf "https://%s" .Values.ingress.domain) (printf "https://www.%s" .Values.ingress.domain) (printf "https://api.%s" .Values.ingress.domain) }}
+            {{- range $index, $origin := concat $defaultOrigins .Values.api.cors.extraAllowedOrigins }}
             - name: Cors__AllowedOrigins__{{ $index }}
               value: {{ $origin | quote }}
             {{- end }}
