@@ -34,5 +34,6 @@
   <Folder Name="/Tests/" />
   <Folder Name="/Tests/Controllers/">
     <Project Path="Tests\MadWorldEU.Meishi.Controllers.Api.IntegrationTests\Api.IntegrationTests.csproj" />
+    <Project Path="Tests\MadWorldEU.Meishi.Controllers.MigrationService.IntegrationTests\MigrationService.IntegrationTests.csproj" />
   </Folder>
 </Solution>
