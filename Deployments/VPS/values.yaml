@@ -73,6 +73,22 @@ postgres:
       memory: "512Mi"
       ephemeral-storage: "256Mi"
 
+migrationService:
+  name: migration-service
+  image:
+    repository: "ghcr.io/madworldeu/madworldeu-meishi-migration-service"
+  # Retries before the deployment fails, for example when the database is restarting
+  backoffLimit: 3
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "64Mi"
+      ephemeral-storage: "64Mi"
+    limits:
+      cpu: "500m"
+      memory: "256Mi"
+      ephemeral-storage: "256Mi"
+
 # Exposed through the ingress on pgadmin.<ingress.domain>
 pgadmin:
   name: pgadmin

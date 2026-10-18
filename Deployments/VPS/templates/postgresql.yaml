@@ -89,3 +89,73 @@ spec:
     - port: {{ .Values.postgres.port }}
       targetPort: {{ .Values.postgres.port }}
       protocol: TCP
+---
+# Connection string for the .NET services, in the format of IConfiguration (ConnectionStrings:meishi-db)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.postgres.name }}-connection
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.postgres.name }}
+type: Opaque
+stringData:
+  ConnectionStrings__meishi-db: {{ printf "Host=%s;Port=%v;Database=%s;Username=%s;Password=\"%s\"" .Values.postgres.name .Values.postgres.port .Values.postgres.database .Values.postgres.username (replace "\"" "\"\"" .Values.postgres.password) | quote }}
+---
+# Applies the EF Core migrations once per install or upgrade.
+# As a post-install/post-upgrade hook it runs after the database is created, and Helm waits for it to succeed;
+# a failed migration fails the deployment.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.migrationService.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.migrationService.name }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    # Keep the finished job (and its logs) until the next deployment replaces it
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: {{ .Values.migrationService.backoffLimit }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.migrationService.name }}
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      initContainers:
+        # Waits until PostgreSQL accepts connections before the migrations start
+        - name: wait-for-postgres
+          image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          command:
+            - sh
+            - -c
+            - until pg_isready -h {{ .Values.postgres.name }} -p {{ .Values.postgres.port }} -U {{ .Values.postgres.username }} -d {{ .Values.postgres.database }}; do echo "Waiting for PostgreSQL..."; sleep 2; done
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "16Mi"
+              ephemeral-storage: "16Mi"
+            limits:
+              cpu: "100m"
+              memory: "64Mi"
+              ephemeral-storage: "64Mi"
+      containers:
+        - name: {{ .Values.migrationService.name }}
+          image: "{{ .Values.migrationService.image.repository }}:{{ .Values.appVersion }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.postgres.name }}-connection
+          resources:
+            requests:
+              cpu: {{ .Values.migrationService.resources.requests.cpu | quote }}
+              memory: {{ .Values.migrationService.resources.requests.memory | quote }}
+              ephemeral-storage: {{ index .Values.migrationService.resources.requests "ephemeral-storage" | quote }}
+            limits:
+              cpu: {{ .Values.migrationService.resources.limits.cpu | quote }}
+              memory: {{ .Values.migrationService.resources.limits.memory | quote }}
+              ephemeral-storage: {{ index .Values.migrationService.resources.limits "ephemeral-storage" | quote }}
