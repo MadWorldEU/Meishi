@@ -125,18 +125,29 @@ The secret contains the kubeconfig file encoded as base64:
 ```
 
 The Helm chart also creates a cert-manager `ClusterIssuer` that requests TLS certificates from Let's Encrypt.
-Let's Encrypt needs an email address to send expiry and account notices to, so the deploy step passes the secret `CLUSTER_ISSUER_EMAIL` to the chart:
+Let's Encrypt needs an email address to send expiry and account notices to, so the deploy step passes the secret `CLUSTER_ISSUER_EMAIL` to the chart.
+
+The chart also runs a PostgreSQL database and pgAdmin to manage it.
+`values.yaml` only contains demo credentials for local development, so the deploy step overrides them with the secrets `POSTGRES_PASSWORD`, `PGADMIN_EMAIL` and `PGADMIN_PASSWORD`:
 
 ```yaml
 - name: Deploy
   env:
     CLUSTER_ISSUER_EMAIL: ${{ secrets.CLUSTER_ISSUER_EMAIL }}
+    POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+    PGADMIN_EMAIL: ${{ secrets.PGADMIN_EMAIL }}
+    PGADMIN_PASSWORD: ${{ secrets.PGADMIN_PASSWORD }}
   run: |
     helm upgrade --install meishi Deployments/VPS \
       --values Deployments/VPS/values.yaml \
       --values Deployments/VPS/production-values.yaml \
-      --set clusterIssuer.email="$CLUSTER_ISSUER_EMAIL"
+      --set clusterIssuer.email="$CLUSTER_ISSUER_EMAIL" \
+      --set postgres.password="$POSTGRES_PASSWORD" \
+      --set pgadmin.email="$PGADMIN_EMAIL" \
+      --set pgadmin.password="$PGADMIN_PASSWORD"
 ```
+
+The chart refuses to render when one of these values is empty, so a missing secret stops the deployment before anything changes in the cluster.
 
 ### 1. Get the kubeconfig
 Copy the kubeconfig of the cluster from the server to your machine. The default location is `~/.kube/config`; on k3s it is `/etc/rancher/k3s/k3s.yaml`:
@@ -220,8 +231,23 @@ base64 -w 0 ./kubeconfig | base64 -d | diff - ./kubeconfig && echo OK
 |------------------------|----------------------------------------------------------------|
 | `KUBECONFIG`           | The base64 encoded kubeconfig from step 2                      |
 | `CLUSTER_ISSUER_EMAIL` | The email address Let's Encrypt uses for certificate notices   |
+| `POSTGRES_PASSWORD`    | The password of the PostgreSQL user `meishi`                   |
+| `PGADMIN_EMAIL`        | The email address you log in to pgAdmin with                   |
+| `PGADMIN_PASSWORD`     | The password you log in to pgAdmin with                        |
 
 4. Delete the local `kubeconfig` file; it gives full access to the cluster.
+
+To generate a strong password for `POSTGRES_PASSWORD` and `PGADMIN_PASSWORD`, run:
+
+```bash
+openssl rand -base64 32
+```
+
+> [!NOTE]
+> PostgreSQL only uses `POSTGRES_PASSWORD` the first time it creates the database. Changing the secret afterwards does not change the password of the existing database; change it in PostgreSQL itself first, for example with `ALTER USER meishi WITH PASSWORD '...'` in pgAdmin, and then update the secret.
+
+> [!NOTE]
+> pgAdmin rejects email addresses on reserved domains such as `.local` or `.test`, so use a real-looking address for `PGADMIN_EMAIL`.
 
 ### 4. Protect the environment
 The secrets in `vps-production` give full access to the cluster, so only approved runs from a version tag may use them.
@@ -255,3 +281,4 @@ Open the **Actions** tab to follow the run, and approve the deployment when the 
 > [!TIP]
 > When the step **Write kubeconfig** succeeds but **Deploy** fails with `Kubernetes cluster unreachable`, check the `server` address and the firewall. When it fails with `base64: invalid input`, encode the file again without line breaks.
 > When the `ClusterIssuer` shows an ACME registration error, check that `CLUSTER_ISSUER_EMAIL` is set to a valid email address.
+> When **Deploy** fails with `postgres.password is required`, `pgadmin.email is required` or `pgadmin.password is required`, add the missing secret to the environment `vps-production`.

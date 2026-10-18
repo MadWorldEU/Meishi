@@ -27,7 +27,10 @@ jobs:
             --values Deployments/VPS/values.yaml \
             --values Deployments/VPS/production-values.yaml \
             --set appVersion="dry-run" \
-            --set clusterIssuer.email="dry-run@example.com" > /dev/null
+            --set clusterIssuer.email="dry-run@example.com" \
+            --set postgres.password="dry-run" \
+            --set pgadmin.email="dry-run@example.com" \
+            --set pgadmin.password="dry-run" > /dev/null
   
   deployment:
     if: github.event_name == 'push'
@@ -52,11 +55,17 @@ jobs:
         env:
           IMAGE_TAG: ${{ github.ref_name }}
           CLUSTER_ISSUER_EMAIL: ${{ secrets.CLUSTER_ISSUER_EMAIL }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          PGADMIN_EMAIL: ${{ secrets.PGADMIN_EMAIL }}
+          PGADMIN_PASSWORD: ${{ secrets.PGADMIN_PASSWORD }}
         run: |
           helm upgrade --install meishi Deployments/VPS \
             --values Deployments/VPS/values.yaml \
             --values Deployments/VPS/production-values.yaml \
             --set appVersion="$IMAGE_TAG" \
             --set clusterIssuer.email="$CLUSTER_ISSUER_EMAIL" \
+            --set postgres.password="$POSTGRES_PASSWORD" \
+            --set pgadmin.email="$PGADMIN_EMAIL" \
+            --set pgadmin.password="$PGADMIN_PASSWORD" \
             --wait \
             --timeout 5m

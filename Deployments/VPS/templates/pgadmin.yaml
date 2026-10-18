@@ -1,0 +1,121 @@
+{{- $email := required "pgadmin.email is required, pass it with --set pgadmin.email=..." .Values.pgadmin.email }}
+{{- $password := required "pgadmin.password is required, pass it with --set pgadmin.password=..." .Values.pgadmin.password }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.pgadmin.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.pgadmin.name }}
+type: Opaque
+stringData:
+  PGADMIN_DEFAULT_EMAIL: {{ $email | quote }}
+  PGADMIN_DEFAULT_PASSWORD: {{ $password | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.pgadmin.name }}-servers
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.pgadmin.name }}
+data:
+  servers.json: |
+    {
+      "Servers": {
+        "1": {
+          "Name": "Meishi PostgreSQL",
+          "Group": "Servers",
+          "Host": "{{ .Values.postgres.name }}",
+          "Port": {{ .Values.postgres.port }},
+          "MaintenanceDB": "{{ .Values.postgres.database }}",
+          "Username": "{{ .Values.postgres.username }}",
+          "SSLMode": "prefer",
+          "Shared": true
+        }
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.pgadmin.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.pgadmin.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.pgadmin.name }}
+  template:
+    metadata:
+      annotations:
+        # Restarts pgAdmin when its login or the server list changes, so the new values are loaded
+        checksum/config: {{ list .Values.pgadmin .Values.postgres.name .Values.postgres.port .Values.postgres.database .Values.postgres.username | toJson | sha256sum }}
+      labels:
+        app: {{ .Values.pgadmin.name }}
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: {{ .Values.pgadmin.name }}
+          image: "{{ .Values.pgadmin.image.repository }}:{{ .Values.pgadmin.image.tag }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.pgadmin.port }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.pgadmin.name }}
+          env:
+            - name: PGADMIN_LISTEN_PORT
+              value: {{ .Values.pgadmin.port | quote }}
+            # Server mode requires a login with the email and password from the secret
+            - name: PGADMIN_CONFIG_SERVER_MODE
+              value: "True"
+            - name: PGADMIN_SERVER_JSON_FILE
+              value: /pgadmin4/servers.json
+          volumeMounts:
+            - name: servers-config
+              mountPath: /pgadmin4/servers.json
+              subPath: servers.json
+              readOnly: true
+          livenessProbe:
+            httpGet:
+              path: /misc/ping
+              port: {{ .Values.pgadmin.port }}
+            initialDelaySeconds: 120
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /misc/ping
+              port: {{ .Values.pgadmin.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: {{ .Values.pgadmin.resources.requests.cpu | quote }}
+              memory: {{ .Values.pgadmin.resources.requests.memory | quote }}
+              ephemeral-storage: {{ index .Values.pgadmin.resources.requests "ephemeral-storage" | quote }}
+            limits:
+              cpu: {{ .Values.pgadmin.resources.limits.cpu | quote }}
+              memory: {{ .Values.pgadmin.resources.limits.memory | quote }}
+              ephemeral-storage: {{ index .Values.pgadmin.resources.limits "ephemeral-storage" | quote }}
+      volumes:
+        - name: servers-config
+          configMap:
+            name: {{ .Values.pgadmin.name }}-servers
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.pgadmin.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.pgadmin.name }}
+spec:
+  selector:
+    app: {{ .Values.pgadmin.name }}
+  ports:
+    - port: {{ .Values.pgadmin.port }}
+      targetPort: {{ .Values.pgadmin.port }}
+      protocol: TCP
