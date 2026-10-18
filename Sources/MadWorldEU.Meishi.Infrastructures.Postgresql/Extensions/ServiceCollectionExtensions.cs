@@ -12,7 +12,11 @@ public static class ServiceCollectionExtensions
         {
             services.AddDbContext<MeishiContext>(options => 
                 options.UseNpgsql(configuration.GetConnectionString("meishi-db"), 
-                    builder => builder.UseNodaTime()));
+                    builder =>
+                    {
+                        builder.MigrationsAssembly("Postgresql");
+                        builder.UseNodaTime();
+                    }));
         }
     }
 }
