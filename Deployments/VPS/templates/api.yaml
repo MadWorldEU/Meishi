@@ -22,6 +22,10 @@ spec:
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           ports:
             - containerPort: {{ .Values.api.port }}
+          # Connection string for PostgreSQL (ConnectionStrings__meishi-db)
+          envFrom:
+            - secretRef:
+                name: {{ .Values.postgres.name }}-connection
           env:
             # The Portal calls the API from the browser, so its origins must be allowed by CORS
             {{- $portalOrigins := list (printf "https://%s" .Values.ingress.domain) (printf "https://www.%s" .Values.ingress.domain) }}
