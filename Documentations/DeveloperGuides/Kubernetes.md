@@ -39,6 +39,7 @@ Add the following entries to your hosts file so the local domains resolve to you
 ```
 127.0.0.1       meishi.dev
 127.0.0.1       api.meishi.dev
+127.0.0.1       pgadmin.meishi.dev
 127.0.0.1       www.meishi.dev
 ```
 
