@@ -5,10 +5,11 @@ var builder = DistributedApplication.CreateBuilder(args);
 var postgres = builder.AddPostgres("postgres")
     .WithPgAdmin();
 
-var meishiDb = postgres.AddDatabase("meishi");
+var meishiDb = postgres.AddDatabase("meishi-db");
 
 var api = builder.AddProject<Api>(nameof(Api))
-    .WaitFor(meishiDb);
+    .WaitFor(meishiDb)
+    .WithReference(meishiDb);
 
 // Angular CLI is not Vite-driven: run `npm start` (ng serve) and hand it the Aspire-assigned port.
 var portal = builder.AddJavaScriptApp("Portal", "../MadWorldEU.Meishi.Controllers.Portal", "start")

@@ -12,6 +12,10 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Scalar.AspNetCore" />
     </ItemGroup>
 
@@ -24,6 +28,9 @@
     <ItemGroup>
       <ProjectReference Include="..\MadWorldEU.Meishi.Core.Application\Application.csproj" />
       <ProjectReference Include="..\MadWorldEU.Meishi.Core.Contracts\Contracts.csproj" />
+      <ProjectReference Include="..\MadWorldEU.Meishi.Core.Domain\Domain.csproj" />
+      <ProjectReference Include="..\MadWorldEU.Meishi.Infrastructures.Database\Database.csproj" />
+      <ProjectReference Include="..\MadWorldEU.Meishi.Infrastructures.Postgresql\Postgresql.csproj" />
     </ItemGroup>
 
 </Project>

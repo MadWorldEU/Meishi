@@ -10,21 +10,23 @@ This site holds the technical documentation for the Meishi project.
 
 ## Project overview
 
-Meishi is built with .NET 10 and Angular 22, and orchestrated with .NET Aspire.
+Meishi is built with .NET 10 and Angular 22, stores its data in PostgreSQL, and is orchestrated with .NET Aspire.
 
-| Project                                              | Description                                                                      |
-| ---------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `MadWorldEU.Meishi.AppHost`                          | Aspire AppHost that wires up and runs the API and the portal locally.            |
-| `MadWorldEU.Meishi.Controllers.Api`                  | ASP.NET Core Web API that serves the Meishi backend.                             |
-| `MadWorldEU.Meishi.Controllers.Portal`               | Angular frontend of Meishi, served by nginx in production.                       |
-| `MadWorldEU.Meishi.Core.Application`                 | Application layer with the use cases that the API calls.                         |
-| `MadWorldEU.Meishi.Core.Contracts`                   | Request and response models shared between the API and its clients.              |
-| `MadWorldEU.Meishi.Core.Domain`                      | Domain layer with the core entities and business rules.                          |
-| `MadWorldEU.Meishi.Controllers.Api.IntegrationTests` | xUnit integration tests that run the API in memory with `WebApplicationFactory`. |
-| `Deployments`                                        | Helm chart for deploying Meishi to the VPS with Kubernetes.                      |
-| `Documentations`                                     | DocFx project that generates this documentation site.                            |
-| `Github`                                             | GitHub Actions workflows, issue and pull request templates.                      |
+| Project                                              | Description                                                                        |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `MadWorldEU.Meishi.AppHost`                          | Aspire AppHost that wires up and runs PostgreSQL, the API and the portal locally.  |
+| `MadWorldEU.Meishi.Controllers.Api`                  | ASP.NET Core Web API that serves the Meishi backend.                               |
+| `MadWorldEU.Meishi.Controllers.Portal`               | Angular frontend of Meishi, served by nginx in production.                         |
+| `MadWorldEU.Meishi.Core.Application`                 | Application layer with the use cases that the API calls.                           |
+| `MadWorldEU.Meishi.Core.Contracts`                   | Request and response models shared between the API and its clients.                |
+| `MadWorldEU.Meishi.Core.Domain`                      | Domain layer with the core entities and business rules.                            |
+| `MadWorldEU.Meishi.Infrastructures.Database`         | Database layer with the EF Core `MeishiContext`.                                   |
+| `MadWorldEU.Meishi.Infrastructures.Postgresql`       | PostgreSQL setup for the `MeishiContext` with Npgsql, plus the EF Core migrations. |
+| `MadWorldEU.Meishi.Controllers.Api.IntegrationTests` | xUnit integration tests that run the API in memory with `WebApplicationFactory`.   |
+| `Deployments`                                        | Helm chart for deploying Meishi to the VPS with Kubernetes.                        |
+| `Documentations`                                     | DocFx project that generates this documentation site.                              |
+| `Github`                                             | GitHub Actions workflows, issue and pull request templates.                        |
 
 ## Documentation
 
-- [Developer Guides](DeveloperGuides/DocFx.md): guides for working on the project, from setting up a development environment and releasing versions to configuring GitHub, the VPS, DNS and Kubernetes, and building this documentation with DocFx.
+- [Developer Guides](DeveloperGuides/DocFx.md): guides for working on the project, from setting up a development environment and releasing versions to managing the database and its migrations, configuring GitHub, the VPS, DNS and Kubernetes, and building this documentation with DocFx.
