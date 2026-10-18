@@ -46,12 +46,27 @@ public sealed class DatabaseMigratorTests : IAsyncLifetime
         await AssertAllMigrationsAppliedAsync();
     }
 
-    private async Task<int> RunMigrationServiceAsync()
+    [Fact]
+    public async Task Run_WhenDatabaseIsOffline_ExitsWithErrorCode()
+    {
+        // Arrange
+        // Read the connection string first, a stopped container no longer has a mapped port
+        var connectionString = _postgres.GetConnectionString();
+        await _postgres.StopAsync();
+
+        // Act
+        var exitCode = await RunMigrationServiceAsync(connectionString);
+
+        // Assert
+        Assert.Equal(1, exitCode);
+    }
+
+    private async Task<int> RunMigrationServiceAsync(string? connectionString = null)
     {
         var builder = Host.CreateApplicationBuilder();
         builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
         {
-            ["ConnectionStrings:meishi-db"] = _postgres.GetConnectionString()
+            ["ConnectionStrings:meishi-db"] = connectionString ?? _postgres.GetConnectionString()
         });
         builder.Services.AddMigrationService(builder.Configuration);
 
@@ -63,7 +78,11 @@ public sealed class DatabaseMigratorTests : IAsyncLifetime
         await host.RunAsync(timeout.Token);
 
         Assert.False(timeout.IsCancellationRequested, "The migration service did not stop on its own.");
-        return Environment.ExitCode;
+
+        // Reset it afterwards as well, so a failed run does not fail the test process itself
+        var exitCode = Environment.ExitCode;
+        Environment.ExitCode = 0;
+        return exitCode;
     }
 
     private async Task AssertAllMigrationsAppliedAsync()
