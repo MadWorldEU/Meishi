@@ -10,7 +10,8 @@ public static class CurriculaVitaeEndpoints
     {
         public void AddCurriculaVitaeEndpoints()
         {
-            var curriculaVitaeEndpoints = app.MapGroup("/curricula-vitae");
+            var curriculaVitaeEndpoints = app.MapGroup("/curricula-vitae")
+                .WithTags("Curricula Vitae");
             
             curriculaVitaeEndpoints.MapGet("", async (IMediator mediator, CancellationToken cancellationToken) =>
             {

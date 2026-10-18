@@ -1,6 +1,6 @@
 namespace: meishi
 imagePullPolicy: "IfNotPresent"
-appVersion: "v0.3.0"
+appVersion: "v0.5.1"
 
 clusterIssuer:
   enabled: false
