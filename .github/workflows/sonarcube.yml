@@ -27,7 +27,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24.x
+          node-version: 24.22.1
           cache: npm
           cache-dependency-path: Sources/MadWorldEU.Meishi.Controllers.Portal/package-lock.json
       - name: Install Angular dependencies
