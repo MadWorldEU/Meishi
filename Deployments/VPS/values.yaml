@@ -73,6 +73,13 @@ postgres:
       memory: "512Mi"
       ephemeral-storage: "256Mi"
 
+# Prepares the chart for Velero backups. Velero itself is installed from a separate repository;
+# without Velero these annotations and labels have no effect.
+backup:
+  enabled: true
+  # Max time the pre-backup hook (CHECKPOINT in PostgreSQL) may take before the backup fails
+  hookTimeout: "2m"
+
 migrationService:
   name: migration-service
   image:

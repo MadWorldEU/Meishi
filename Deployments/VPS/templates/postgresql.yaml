@@ -28,6 +28,16 @@ spec:
     metadata:
       labels:
         app: {{ .Values.postgres.name }}
+      {{- if .Values.backup.enabled }}
+      annotations:
+        # Velero file-system backup copies the files on this volume (needs the Velero node agent)
+        backup.velero.io/backup-volumes: postgres-data
+        # Writes all pending changes to disk before Velero copies the volume
+        pre.hook.backup.velero.io/container: {{ .Values.postgres.name }}
+        pre.hook.backup.velero.io/command: '["sh", "-c", "psql -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\" -c CHECKPOINT"]'
+        pre.hook.backup.velero.io/on-error: Fail
+        pre.hook.backup.velero.io/timeout: {{ .Values.backup.hookTimeout | quote }}
+      {{- end }}
     spec:
       automountServiceAccountToken: false
       containers:
@@ -112,6 +122,10 @@ metadata:
   namespace: {{ .Values.namespace }}
   labels:
     app: {{ .Values.migrationService.name }}
+    {{- if .Values.backup.enabled }}
+    # Every install or upgrade runs the migrations again, so a backup doesn't need them
+    velero.io/exclude-from-backup: "true"
+    {{- end }}
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     # Keep the finished job (and its logs) until the next deployment replaces it
@@ -122,6 +136,10 @@ spec:
     metadata:
       labels:
         app: {{ .Values.migrationService.name }}
+        {{- if .Values.backup.enabled }}
+        # Every install or upgrade runs the migrations again, so a backup doesn't need them
+        velero.io/exclude-from-backup: "true"
+        {{- end }}
     spec:
       automountServiceAccountToken: false
       restartPolicy: Never
