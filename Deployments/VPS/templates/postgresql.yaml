@@ -30,13 +30,21 @@ spec:
         app: {{ .Values.postgres.name }}
       {{- if .Values.backup.enabled }}
       annotations:
-        # Velero file-system backup copies the files on this volume (needs the Velero node agent)
-        backup.velero.io/backup-volumes: postgres-data
-        # Writes all pending changes to disk before Velero copies the volume
+        # The data volume is a hostPath volume (local-path provisioner), which Velero can't back up.
+        # Velero backs up a pg_dump in the postgres-backup volume instead.
+        backup.velero.io/backup-volumes: postgres-backup
+        backup.velero.io/backup-volumes-excludes: postgres-data
+        # Writes a consistent dump of the database before Velero copies the backup volume
         pre.hook.backup.velero.io/container: {{ .Values.postgres.name }}
-        pre.hook.backup.velero.io/command: '["sh", "-c", "psql -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\" -c CHECKPOINT"]'
+        pre.hook.backup.velero.io/command: '["sh", "-c", "pg_dump -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\" -Fc -f /var/lib/postgresql/backup/meishi.dump.tmp && mv /var/lib/postgresql/backup/meishi.dump.tmp /var/lib/postgresql/backup/meishi.dump"]'
         pre.hook.backup.velero.io/on-error: Fail
         pre.hook.backup.velero.io/timeout: {{ .Values.backup.hookTimeout | quote }}
+        # After a Velero restore, loads the dump into the new (empty) database
+        post.hook.restore.velero.io/container: {{ .Values.postgres.name }}
+        post.hook.restore.velero.io/command: '["sh", "-c", "pg_restore -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\" --clean --if-exists --no-owner /var/lib/postgresql/backup/meishi.dump"]'
+        post.hook.restore.velero.io/wait-for-ready: "true"
+        post.hook.restore.velero.io/on-error: Fail
+        post.hook.restore.velero.io/exec-timeout: {{ .Values.backup.hookTimeout | quote }}
       {{- end }}
     spec:
       automountServiceAccountToken: false
@@ -75,6 +83,17 @@ spec:
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql/data
+            {{- if .Values.backup.enabled }}
+            - name: postgres-backup
+              mountPath: /var/lib/postgresql/backup
+            {{- end }}
+      {{- if .Values.backup.enabled }}
+      volumes:
+        # Holds the pg_dump that Velero backs up; counts towards the pod's ephemeral storage
+        - name: postgres-backup
+          emptyDir:
+            sizeLimit: {{ .Values.backup.dumpSizeLimit | quote }}
+      {{- end }}
   volumeClaimTemplates:
     - metadata:
         name: postgres-data
