@@ -1,5 +1,5 @@
 clusterIssuer:
-  enabled: false
+  enabled: true
 
 ingress:
   domain: "oscarveldman.eu"
