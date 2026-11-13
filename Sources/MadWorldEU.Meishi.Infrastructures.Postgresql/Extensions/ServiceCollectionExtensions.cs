@@ -1,3 +1,5 @@
+using MadWorldEU.Meishi.CurriculaVitae;
+using MadWorldEU.Meishi.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +19,8 @@ public static class ServiceCollectionExtensions
                         builder.MigrationsAssembly("Postgresql");
                         builder.UseNodaTime();
                     }));
+
+            services.AddScoped<ICurriculaVitaeRepository, CurriculaVitaeRepository>();
         }
     }
 }

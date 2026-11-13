@@ -24,6 +24,7 @@
   </Folder>
   <Folder Name="/Sources/Core/">
     <Project Path="Sources\MadWorldEU.Meishi.Core.Application\Application.csproj" />
+    <Project Path="Sources\MadWorldEU.Meishi.Core.BuildingBlocks\BuildingBlocks.csproj" />
     <Project Path="Sources\MadWorldEU.Meishi.Core.Contracts\Contracts.csproj" />
     <Project Path="Sources\MadWorldEU.Meishi.Core.Domain\Domain.csproj" />
   </Folder>

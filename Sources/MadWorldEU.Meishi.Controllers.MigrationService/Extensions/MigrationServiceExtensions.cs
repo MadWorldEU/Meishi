@@ -7,6 +7,7 @@ public static class MigrationServiceExtensions
         public void AddMigrationService(IConfiguration configuration)
         {
             services.AddPostgresql(configuration);
+            services.AddScoped<DefaultCurriculumVitaeSeeder>();
             services.AddHostedService<DatabaseMigrator>();
         }
     }

@@ -47,6 +47,34 @@ public sealed class DatabaseMigratorTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task Run_WhenDatabaseIsEmpty_SeedsDefaultCurriculumVitae()
+    {
+        // Act
+        var exitCode = await RunMigrationServiceAsync();
+
+        // Assert
+        Assert.Equal(0, exitCode);
+        await using var context = CreateContext();
+        var curriculumVitae = Assert.Single(await context.CurriculaVitae.ToListAsync());
+        Assert.True(curriculumVitae.IsDefault);
+    }
+
+    [Fact]
+    public async Task Run_WhenCurriculumVitaeAlreadyExists_DoesNotSeedAgain()
+    {
+        // Arrange
+        await RunMigrationServiceAsync();
+
+        // Act
+        var exitCode = await RunMigrationServiceAsync();
+
+        // Assert
+        Assert.Equal(0, exitCode);
+        await using var context = CreateContext();
+        Assert.Equal(1, await context.CurriculaVitae.CountAsync());
+    }
+
+    [Fact]
     public async Task Run_WhenDatabaseIsOffline_ExitsWithErrorCode()
     {
         // Arrange
@@ -87,22 +115,25 @@ public sealed class DatabaseMigratorTests : IAsyncLifetime
 
     private async Task AssertAllMigrationsAppliedAsync()
     {
-        var services = new ServiceCollection();
-        services.AddPostgresql(new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?>
-            {
-                ["ConnectionStrings:meishi-db"] = _postgres.GetConnectionString()
-            })
-            .Build());
-
-        await using var provider = services.BuildServiceProvider();
-        await using var scope = provider.CreateAsyncScope();
-        var context = scope.ServiceProvider.GetRequiredService<MeishiContext>();
+        await using var context = CreateContext();
 
         var pending = await context.Database.GetPendingMigrationsAsync();
         var applied = await context.Database.GetAppliedMigrationsAsync();
 
         Assert.Empty(pending);
         Assert.Equal(context.Database.GetMigrations(), applied);
+    }
+
+    private MeishiContext CreateContext()
+    {
+        var options = new DbContextOptionsBuilder<MeishiContext>()
+            .UseNpgsql(_postgres.GetConnectionString(), builder =>
+            {
+                builder.MigrationsAssembly("Postgresql");
+                builder.UseNodaTime();
+            })
+            .Options;
+
+        return new MeishiContext(options);
     }
 }
