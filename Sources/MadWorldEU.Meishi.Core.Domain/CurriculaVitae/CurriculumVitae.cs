@@ -38,6 +38,7 @@ public sealed class CurriculumVitae : AggregateRoot<Guid>
         IsDefault = isDefault;
     }
 
+    /// <summary>Adds a work experience to the curriculum vitae and returns it.</summary>
     public Experience AddExperience(Period period, string role, string company, IEnumerable<string> highlights)
     {
         var experience = new Experience(Guid.CreateVersion7(), period, role, company, highlights);
@@ -45,6 +46,7 @@ public sealed class CurriculumVitae : AggregateRoot<Guid>
         return experience;
     }
 
+    /// <summary>Adds an education to the curriculum vitae and returns it.</summary>
     public Education AddEducation(Period period, string degree, string school)
     {
         var education = new Education(Guid.CreateVersion7(), period, degree, school);
@@ -52,6 +54,7 @@ public sealed class CurriculumVitae : AggregateRoot<Guid>
         return education;
     }
 
+    /// <summary>Adds a named group of skills to the curriculum vitae and returns it.</summary>
     public SkillGroup AddSkillGroup(string name, IEnumerable<Skill> skills)
     {
         var skillGroup = new SkillGroup(Guid.CreateVersion7(), name, skills);
@@ -59,6 +62,7 @@ public sealed class CurriculumVitae : AggregateRoot<Guid>
         return skillGroup;
     }
 
+    /// <summary>Adds a way to get in touch, such as an email address or a profile link.</summary>
     public void AddContactLink(ContactLink contactLink)
     {
         ArgumentNullException.ThrowIfNull(contactLink);

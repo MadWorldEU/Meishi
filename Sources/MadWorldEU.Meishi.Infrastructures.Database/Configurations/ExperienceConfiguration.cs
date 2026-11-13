@@ -6,6 +6,7 @@ namespace MadWorldEU.Meishi.Configurations;
 
 public sealed class ExperienceConfiguration : IEntityTypeConfiguration<Experience>
 {
+    /// <inheritdoc />
     public void Configure(EntityTypeBuilder<Experience> builder)
     {
         builder.ToTable("Experiences");

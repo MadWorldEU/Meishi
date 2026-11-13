@@ -9,6 +9,7 @@ public static class CurriculaVitaeEndpoints
 {
     extension(WebApplication app)
     {
+        /// <summary>Maps the curricula vitae endpoints under <c>/curricula-vitae</c>.</summary>
         public void AddCurriculaVitaeEndpoints()
         {
             var curriculaVitaeEndpoints = app.MapGroup("/curricula-vitae")

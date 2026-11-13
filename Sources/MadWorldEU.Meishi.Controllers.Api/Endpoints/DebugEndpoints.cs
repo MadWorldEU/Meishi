@@ -4,6 +4,7 @@ public static class DebugEndpoints
 {
     extension(WebApplication app)
     {
+        /// <summary>Maps the debug endpoints under <c>/debug</c>.</summary>
         public void AddDebugEndpoints()
         {
             var debugEndpoints = app.MapGroup("/debug")

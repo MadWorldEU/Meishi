@@ -14,6 +14,7 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
         Id = id;
     }
 
+    /// <inheritdoc />
     public bool Equals(Entity<TId>? other)
     {
         if (other is null)
@@ -29,11 +30,15 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
         return GetType() == other.GetType() && EqualityComparer<TId>.Default.Equals(Id, other.Id);
     }
 
+    /// <inheritdoc />
     public override bool Equals(object? obj) => obj is Entity<TId> other && Equals(other);
 
+    /// <inheritdoc />
     public override int GetHashCode() => HashCode.Combine(GetType(), Id);
 
+    /// <summary>Returns whether both entities are equal, see <see cref="Equals(Entity{TId}?)"/>.</summary>
     public static bool operator ==(Entity<TId>? left, Entity<TId>? right) => Equals(left, right);
 
+    /// <summary>Returns whether the entities are not equal, see <see cref="Equals(Entity{TId}?)"/>.</summary>
     public static bool operator !=(Entity<TId>? left, Entity<TId>? right) => !Equals(left, right);
 }

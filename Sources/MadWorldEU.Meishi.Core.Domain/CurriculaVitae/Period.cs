@@ -21,6 +21,7 @@ public sealed class Period : ValueObject
         EndYear = endYear;
     }
 
+    /// <summary>Formats the period as <c>2020 - 2023</c>, or <c>2023 - present</c> when it is still ongoing.</summary>
     public override string ToString() => $"{StartYear} - {EndYear?.ToString() ?? "present"}";
 
     protected override IEnumerable<object?> GetEqualityComponents() => [StartYear, EndYear];

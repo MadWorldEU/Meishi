@@ -5,6 +5,7 @@ namespace MadWorldEU.Meishi.Repositories;
 
 public sealed class CurriculaVitaeRepository(MeishiContext context) : ICurriculaVitaeRepository
 {
+    /// <inheritdoc />
     public Task<CurriculumVitae?> GetLatestAsync(CancellationToken cancellationToken = default)
     {
         // Ids are version 7 GUIDs, which are time-ordered, so the highest id is the latest curriculum vitae
@@ -17,6 +18,7 @@ public sealed class CurriculaVitaeRepository(MeishiContext context) : ICurricula
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    /// <inheritdoc />
     public async Task AddOrUpdateAsync(CurriculumVitae curriculumVitae, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(curriculumVitae);

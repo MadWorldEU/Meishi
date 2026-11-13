@@ -6,6 +6,7 @@ namespace MadWorldEU.Meishi.Configurations;
 
 public sealed class EducationConfiguration : IEntityTypeConfiguration<Education>
 {
+    /// <inheritdoc />
     public void Configure(EntityTypeBuilder<Education> builder)
     {
         builder.ToTable("Educations");

@@ -6,6 +6,7 @@ public static class CurriculaVitaeMappings
 {
     extension(GetDefaultCurriculumVitaeResult result)
     {
+        /// <summary>Maps the result and everything it contains to a <see cref="GetDefaultCurriculumVitaeResponse"/>.</summary>
         public GetDefaultCurriculumVitaeResponse ToResponse() => new()
         {
             FirstName = result.FirstName,

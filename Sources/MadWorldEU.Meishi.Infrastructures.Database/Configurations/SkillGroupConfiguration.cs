@@ -6,6 +6,7 @@ namespace MadWorldEU.Meishi.Configurations;
 
 public sealed class SkillGroupConfiguration : IEntityTypeConfiguration<SkillGroup>
 {
+    /// <inheritdoc />
     public void Configure(EntityTypeBuilder<SkillGroup> builder)
     {
         builder.ToTable("SkillGroups");

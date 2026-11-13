@@ -5,6 +5,7 @@ namespace MadWorldEU.Meishi.CurriculaVitae;
 public class GetDefaultCurriculumVitaeQueryHandler(ICurriculaVitaeRepository repository)
     : IRequestHandler<GetDefaultCurriculumVitaeQuery, GetDefaultCurriculumVitaeResult?>
 {
+    /// <inheritdoc />
     public async ValueTask<GetDefaultCurriculumVitaeResult?> Handle(GetDefaultCurriculumVitaeQuery request, CancellationToken cancellationToken)
     {
         var curriculumVitae = await repository.GetLatestAsync(cancellationToken);

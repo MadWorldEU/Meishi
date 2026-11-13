@@ -10,6 +10,7 @@ public static class ServiceCollectionExtensions
 {
     extension(IServiceCollection services)
     {
+        /// <summary>Registers the <see cref="MeishiContext"/> on PostgreSQL, using the <c>meishi-db</c> connection string, and the repositories.</summary>
         public void AddPostgresql(IConfiguration configuration)
         {
             services.AddDbContext<MeishiContext>(options => 

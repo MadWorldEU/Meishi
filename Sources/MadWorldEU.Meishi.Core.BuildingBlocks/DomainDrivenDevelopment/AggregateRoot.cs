@@ -17,5 +17,6 @@ public abstract class AggregateRoot<TId> : Entity<TId>
 
     protected void RaiseDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
 
+    /// <summary>Removes all collected domain events, typically after they have been dispatched.</summary>
     public void ClearDomainEvents() => _domainEvents.Clear();
 }
