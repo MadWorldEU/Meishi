@@ -10,6 +10,7 @@
     <File Path="nuget.config" />
     <File Path="README.md" />
     <File Path="SECURITY.md" />
+    <Project Path=".claude/Claude.csproj" />
     <Project Path=".github/Github.csproj" />
     <Project Path="Deployments/Deployments.csproj" />
     <Project Path="Documentations/Documentations.csproj" />
