@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 namespace MadWorldEU.Meishi;
 
 /// <summary>
-/// Applies the pending EF Core migrations and then stops the application.
+/// Applies the pending EF Core migrations, seeds the default data and then stops the application.
 /// Aspire waits for this service to finish before it starts the API.
 /// </summary>
-public sealed class DatabaseMigrator(
+internal sealed class DatabaseMigrator(
     IServiceProvider serviceProvider,
     IHostApplicationLifetime lifetime,
     ILogger<DatabaseMigrator> logger) : BackgroundService
@@ -21,6 +21,9 @@ public sealed class DatabaseMigrator(
             logger.LogInformation("Applying database migrations...");
             await context.Database.MigrateAsync(stoppingToken);
             logger.LogInformation("Database migrations applied.");
+
+            var seeder = scope.ServiceProvider.GetRequiredService<DefaultCurriculumVitaeSeeder>();
+            await seeder.SeedAsync(stoppingToken);
         }
         catch (Exception exception)
         {

@@ -1,12 +1,14 @@
 namespace MadWorldEU.Meishi.Extensions;
 
-public static class MigrationServiceExtensions
+internal static class MigrationServiceExtensions
 {
     extension(IServiceCollection services)
     {
-        public void AddMigrationService(IConfiguration configuration)
+        /// <summary>Registers the database, the default data seeder and the hosted service that migrates and seeds the database.</summary>
+        internal void AddMigrationService(IConfiguration configuration)
         {
             services.AddPostgresql(configuration);
+            services.AddScoped<DefaultCurriculumVitaeSeeder>();
             services.AddHostedService<DatabaseMigrator>();
         }
     }

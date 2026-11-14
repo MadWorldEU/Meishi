@@ -9,6 +9,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <InternalsVisibleTo Include="Api.IntegrationTests" />
+      <InternalsVisibleTo Include="MigrationService.IntegrationTests" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\MadWorldEU.Meishi.Infrastructures.Postgresql\Postgresql.csproj" />
     </ItemGroup>
 

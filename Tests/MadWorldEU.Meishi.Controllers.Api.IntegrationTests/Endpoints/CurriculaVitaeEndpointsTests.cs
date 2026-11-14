@@ -1,18 +1,22 @@
 using System.Net;
 using System.Net.Http.Json;
 using MadWorldEU.Meishi.CurriculaVitae;
+using MadWorldEU.Meishi.Fixtures;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace MadWorldEU.Meishi.Endpoints;
 
-public sealed class CurriculaVitaeEndpointsTests(WebApplicationFactory<Program> factory)
-    : IClassFixture<WebApplicationFactory<Program>>
+public sealed class CurriculaVitaeEndpointsTests(WebApplicationFactory<Program> factory, MigratedDatabaseFixture database)
+    : IClassFixture<WebApplicationFactory<Program>>, IClassFixture<MigratedDatabaseFixture>
 {
     [Fact]
     public async Task GetDefault_WhenCalled_ReturnsCurriculumVitae()
     {
         // Arrange
-        using var client = factory.CreateClient();
+        using var client = factory
+            .WithWebHostBuilder(builder => builder.UseSetting("ConnectionStrings:meishi-db", database.ConnectionString))
+            .CreateClient();
 
         // Act
         using var response = await client.GetAsync("/curricula-vitae");
