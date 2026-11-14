@@ -23,11 +23,11 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 #v6.0.0
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 11.0.x
       - name: Setup Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 #v7.1.0
         with:
-          node-version: 24.22.1
+          node-version: 24.22.3
           cache: npm
           cache-dependency-path: Sources/MadWorldEU.Meishi.Controllers.Portal/package-lock.json
       - name: Install Angular dependencies
