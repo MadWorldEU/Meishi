@@ -1,3 +1,4 @@
+using MadWorldEU.Meishi.CurriculaVitae;
 using MadWorldEU.Meishi.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -72,6 +73,70 @@ public sealed class DatabaseMigratorTests : IAsyncLifetime
         Assert.Equal(0, exitCode);
         await using var context = CreateContext();
         Assert.Equal(1, await context.CurriculaVitae.CountAsync());
+    }
+
+    [Fact]
+    public async Task Run_WhenDatabaseIsEmpty_SeedsAllSectionsOfTheCurriculumVitae()
+    {
+        // Act
+        var exitCode = await RunMigrationServiceAsync();
+
+        // Assert
+        Assert.Equal(0, exitCode);
+        await using var context = CreateContext();
+        var curriculumVitae = await context.CurriculaVitae
+            .Include(cv => cv.Experience)
+            .Include(cv => cv.Education)
+            .Include(cv => cv.SkillGroups)
+            .AsSplitQuery()
+            .SingleAsync();
+
+        Assert.Equal("John", curriculumVitae.FirstName);
+        Assert.Equal("Doe", curriculumVitae.LastName);
+
+        Assert.Equal(2, curriculumVitae.Experience.Count);
+        Assert.All(curriculumVitae.Experience, experience => Assert.NotEmpty(experience.Highlights));
+        Assert.Single(curriculumVitae.Experience, experience => experience.Period.IsOngoing);
+
+        var education = Assert.Single(curriculumVitae.Education);
+        Assert.Equal(new Period(2016, 2020), education.Period);
+
+        Assert.Equal(["backend", "devops", "frontend"], curriculumVitae.SkillGroups.Select(group => group.Name).Order());
+        Assert.All(curriculumVitae.SkillGroups, group => Assert.NotEmpty(group.Skills));
+
+        Assert.Equal(["email", "github", "linkedin"], curriculumVitae.ContactLinks.Select(link => link.Label));
+    }
+
+    [Fact]
+    public async Task Run_WhenOwnCurriculumVitaeExists_KeepsItAndDoesNotSeed()
+    {
+        // Arrange
+        var ownCurriculumVitae = new CurriculumVitae(
+            Guid.CreateVersion7(),
+            firstName: "Jane",
+            lastName: "Smith",
+            role: "Architect",
+            location: "Belgium",
+            about: "My own curriculum vitae.",
+            isDefault: false);
+
+        await using (var context = CreateContext())
+        {
+            await context.Database.MigrateAsync();
+            context.CurriculaVitae.Add(ownCurriculumVitae);
+            await context.SaveChangesAsync();
+        }
+
+        // Act
+        var exitCode = await RunMigrationServiceAsync();
+
+        // Assert
+        Assert.Equal(0, exitCode);
+        await using var assertContext = CreateContext();
+        var curriculumVitae = Assert.Single(await assertContext.CurriculaVitae.ToListAsync());
+        Assert.Equal(ownCurriculumVitae.Id, curriculumVitae.Id);
+        Assert.Equal("Jane", curriculumVitae.FirstName);
+        Assert.False(curriculumVitae.IsDefault);
     }
 
     [Fact]
