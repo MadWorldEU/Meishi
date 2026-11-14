@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFramework>net11.0</TargetFramework>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <!-- CA1873: LoggerMessage delegates are not required for this project. Use standard ILogger extension methods instead. -->
         <!-- NU1901: Package with known low-severity vulnerability. -->
