@@ -1,11 +1,11 @@
 namespace MadWorldEU.Meishi.Endpoints;
 
-public static class DebugEndpoints
+internal static class DebugEndpoints
 {
     extension(WebApplication app)
     {
         /// <summary>Maps the debug endpoints under <c>/debug</c>.</summary>
-        public void AddDebugEndpoints()
+        internal void AddDebugEndpoints()
         {
             var debugEndpoints = app.MapGroup("/debug")
                 .WithTags("Debug");

@@ -5,7 +5,7 @@ internal static class CurriculaVitaeMappings
     extension(CurriculumVitae curriculumVitae)
     {
         /// <summary>Maps the curriculum vitae and everything it contains to a <see cref="GetDefaultCurriculumVitaeResult"/>.</summary>
-        public GetDefaultCurriculumVitaeResult ToResult() => new()
+        internal GetDefaultCurriculumVitaeResult ToResult() => new()
         {
             FirstName = curriculumVitae.FirstName,
             LastName = curriculumVitae.LastName,

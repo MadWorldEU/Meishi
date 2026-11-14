@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MadWorldEU.Meishi.Configurations;
 
-public sealed class ExperienceConfiguration : IEntityTypeConfiguration<Experience>
+internal sealed class ExperienceConfiguration : IEntityTypeConfiguration<Experience>
 {
     /// <inheritdoc />
     public void Configure(EntityTypeBuilder<Experience> builder)

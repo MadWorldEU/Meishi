@@ -5,10 +5,10 @@ namespace MadWorldEU.Meishi;
 /// <summary>
 /// Adds a placeholder curriculum vitae when the database does not contain one yet, so the API has something to show.
 /// </summary>
-public sealed class DefaultCurriculumVitaeSeeder(ICurriculaVitaeRepository repository, ILogger<DefaultCurriculumVitaeSeeder> logger)
+internal sealed class DefaultCurriculumVitaeSeeder(ICurriculaVitaeRepository repository, ILogger<DefaultCurriculumVitaeSeeder> logger)
 {
     /// <summary>Adds the default curriculum vitae when the database does not contain a curriculum vitae yet.</summary>
-    public async Task SeedAsync(CancellationToken cancellationToken)
+    internal async Task SeedAsync(CancellationToken cancellationToken)
     {
         if (await repository.GetLatestAsync(cancellationToken) is not null)
         {

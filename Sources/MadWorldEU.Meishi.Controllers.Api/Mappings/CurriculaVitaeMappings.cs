@@ -2,12 +2,12 @@ using MadWorldEU.Meishi.CurriculaVitae;
 
 namespace MadWorldEU.Meishi.Mappings;
 
-public static class CurriculaVitaeMappings
+internal static class CurriculaVitaeMappings
 {
     extension(GetDefaultCurriculumVitaeResult result)
     {
         /// <summary>Maps the result and everything it contains to a <see cref="GetDefaultCurriculumVitaeResponse"/>.</summary>
-        public GetDefaultCurriculumVitaeResponse ToResponse() => new()
+        internal GetDefaultCurriculumVitaeResponse ToResponse() => new()
         {
             FirstName = result.FirstName,
             LastName = result.LastName,

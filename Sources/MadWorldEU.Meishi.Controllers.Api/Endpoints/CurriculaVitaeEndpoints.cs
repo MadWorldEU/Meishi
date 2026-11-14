@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace MadWorldEU.Meishi.Endpoints;
 
-public static class CurriculaVitaeEndpoints
+internal static class CurriculaVitaeEndpoints
 {
     extension(WebApplication app)
     {
         /// <summary>Maps the curricula vitae endpoints under <c>/curricula-vitae</c>.</summary>
-        public void AddCurriculaVitaeEndpoints()
+        internal void AddCurriculaVitaeEndpoints()
         {
             var curriculaVitaeEndpoints = app.MapGroup("/curricula-vitae")
                 .WithTags("Curricula Vitae");

@@ -6,7 +6,7 @@ namespace MadWorldEU.Meishi;
 /// Applies the pending EF Core migrations, seeds the default data and then stops the application.
 /// Aspire waits for this service to finish before it starts the API.
 /// </summary>
-public sealed class DatabaseMigrator(
+internal sealed class DatabaseMigrator(
     IServiceProvider serviceProvider,
     IHostApplicationLifetime lifetime,
     ILogger<DatabaseMigrator> logger) : BackgroundService

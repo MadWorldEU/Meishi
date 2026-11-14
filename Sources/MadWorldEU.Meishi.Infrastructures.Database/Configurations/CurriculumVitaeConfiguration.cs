@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MadWorldEU.Meishi.Configurations;
 
-public sealed class CurriculumVitaeConfiguration : IEntityTypeConfiguration<CurriculumVitae>
+internal sealed class CurriculumVitaeConfiguration : IEntityTypeConfiguration<CurriculumVitae>
 {
     /// <inheritdoc />
     public void Configure(EntityTypeBuilder<CurriculumVitae> builder)

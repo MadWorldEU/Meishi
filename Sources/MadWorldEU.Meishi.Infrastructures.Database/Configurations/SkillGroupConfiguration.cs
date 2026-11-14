@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MadWorldEU.Meishi.Configurations;
 
-public sealed class SkillGroupConfiguration : IEntityTypeConfiguration<SkillGroup>
+internal sealed class SkillGroupConfiguration : IEntityTypeConfiguration<SkillGroup>
 {
     /// <inheritdoc />
     public void Configure(EntityTypeBuilder<SkillGroup> builder)
