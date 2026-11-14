@@ -25,6 +25,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Sources\MadWorldEU.Meishi.Controllers.Api\Api.csproj" />
+      <!-- Aliased, because the migration service and the API both have a top-level Program class. -->
+      <ProjectReference Include="..\..\Sources\MadWorldEU.Meishi.Controllers.MigrationService\MigrationService.csproj" Aliases="MigrationService" />
     </ItemGroup>
 
 </Project>
