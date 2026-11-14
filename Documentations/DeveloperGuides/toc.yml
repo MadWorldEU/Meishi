@@ -6,6 +6,8 @@
   href: SetupDevEnvironment.md
 - name: Database
   href: Database.md
+- name: Upgrades
+  href: Upgrades.md
 - name: Setup GitHub
   href: SetupGithub.md
 - name: Setup VPS
