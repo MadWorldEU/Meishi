@@ -2,7 +2,7 @@ using Mediator;
 
 namespace MadWorldEU.Meishi.CurriculaVitae;
 
-public class GetDefaultCurriculumVitaeQueryHandler(ICurriculaVitaeRepository repository)
+public sealed class GetDefaultCurriculumVitaeQueryHandler(ICurriculaVitaeRepository repository)
     : IRequestHandler<GetDefaultCurriculumVitaeQuery, GetDefaultCurriculumVitaeResult?>
 {
     /// <inheritdoc />
