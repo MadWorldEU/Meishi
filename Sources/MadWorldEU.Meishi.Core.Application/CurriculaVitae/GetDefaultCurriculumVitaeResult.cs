@@ -11,6 +11,7 @@ public record GetDefaultCurriculumVitaeResult
     public required IReadOnlyList<EducationResult> Education { get; init; }
     public required IReadOnlyList<SkillGroupResult> Skills { get; init; }
     public required IReadOnlyList<ContactLinkResult> Contact { get; init; }
+    public required IReadOnlyList<LanguageResult> Languages { get; init; }
 }
 
 public record ExperienceResult
@@ -46,4 +47,11 @@ public record ContactLinkResult
     public required string Label { get; init; }
     public required string Value { get; init; }
     public required string Href { get; init; }
+}
+
+public record LanguageResult
+{
+    public required string Name { get; init; }
+    /// <summary>One of <c>MotherTongue</c>, <c>Expert</c>, <c>Comfortable</c> or <c>Beginner</c>.</summary>
+    public required string Level { get; init; }
 }

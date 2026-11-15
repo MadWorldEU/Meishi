@@ -20,6 +20,7 @@ internal static class CurriculaVitaeMappings
             Education = [.. curriculumVitae.Education.Select(education => education.ToResult())],
             Skills = [.. curriculumVitae.SkillGroups.Select(skillGroup => skillGroup.ToResult())],
             Contact = [.. curriculumVitae.ContactLinks.Select(contactLink => contactLink.ToResult())],
+            Languages = [.. curriculumVitae.Languages.Select(language => language.ToResult())],
         };
     }
 
@@ -69,6 +70,15 @@ internal static class CurriculaVitaeMappings
             Label = contactLink.Label,
             Value = contactLink.Value,
             Href = contactLink.Href,
+        };
+    }
+
+    extension(Language language)
+    {
+        private LanguageResult ToResult() => new()
+        {
+            Name = language.Name,
+            Level = language.Level.ToString(),
         };
     }
 }

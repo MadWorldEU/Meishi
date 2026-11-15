@@ -105,6 +105,10 @@ public sealed class DatabaseMigratorTests : IAsyncLifetime
         Assert.All(curriculumVitae.SkillGroups, group => Assert.NotEmpty(group.Skills));
 
         Assert.Equal(["email", "github", "linkedin"], curriculumVitae.ContactLinks.Select(link => link.Label));
+
+        Assert.Equal(
+            [new Language("Dutch", LanguageLevel.MotherTongue), new Language("English", LanguageLevel.Expert), new Language("German", LanguageLevel.Beginner)],
+            curriculumVitae.Languages);
     }
 
     [Fact]

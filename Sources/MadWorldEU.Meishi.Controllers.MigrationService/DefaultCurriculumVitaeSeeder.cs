@@ -61,6 +61,10 @@ internal sealed class DefaultCurriculumVitaeSeeder(ICurriculaVitaeRepository rep
         curriculumVitae.AddContactLink(new ContactLink("github", "github.com/your-name", "https://github.com/your-name"));
         curriculumVitae.AddContactLink(new ContactLink("linkedin", "linkedin.com/in/your-name", "https://www.linkedin.com/in/your-name"));
 
+        curriculumVitae.AddLanguage(new Language("Dutch", LanguageLevel.MotherTongue));
+        curriculumVitae.AddLanguage(new Language("English", LanguageLevel.Expert));
+        curriculumVitae.AddLanguage(new Language("German", LanguageLevel.Beginner));
+
         return curriculumVitae;
     }
 }
