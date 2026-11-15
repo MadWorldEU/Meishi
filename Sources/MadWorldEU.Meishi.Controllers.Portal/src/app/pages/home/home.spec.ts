@@ -180,6 +180,13 @@ describe('Home', () => {
       });
     });
 
+    it('should not offer to show more experience when there are only a few', () => {
+      expect(compiled.querySelector('#experience .more')).toBeNull();
+      expect(compiled.querySelector('#experience .prompt__command')?.textContent).toBe(
+        'ls -l ~/experience',
+      );
+    });
+
     it('should render every education entry', () => {
       expect(texts('#education .entry__title')).toEqual(CV.education.map((item) => item.degree));
       expect(texts('#education .muted')).toEqual(CV.education.map((item) => item.school));
@@ -212,6 +219,74 @@ describe('Home', () => {
       );
       expect(texts('#contact dt')).toEqual(CV.contact.map((contact) => `${contact.label}:`));
     });
+  });
+});
+
+describe('Home experience', () => {
+  const experience = Array.from({ length: 5 }, (_, index) => ({
+    period: `${2020 - index}`,
+    role: 'Developer',
+    company: `Company ${index + 1}`,
+    highlights: [],
+  }));
+
+  let fixture: ComponentFixture<Home>;
+  let compiled: HTMLElement;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [Home],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    }).compileComponents();
+    TestBed.inject(AppSettings).apiUrl = 'https://api.example.com';
+
+    fixture = TestBed.createComponent(Home);
+    await fixture.whenStable();
+    TestBed.inject(HttpTestingController)
+      .expectOne(CURRICULUM_VITAE_URL)
+      .flush({ ...CV, experience });
+    await fixture.whenStable();
+    compiled = fixture.nativeElement as HTMLElement;
+  });
+
+  const companies = () =>
+    Array.from(compiled.querySelectorAll('#experience .entry__title'), (title) =>
+      title.textContent?.trim(),
+    );
+  const toggle = () => compiled.querySelector<HTMLButtonElement>('#experience .more')!;
+
+  it('should show only the first three experiences by default', () => {
+    expect(companies()).toEqual([
+      'Developer @ Company 1',
+      'Developer @ Company 2',
+      'Developer @ Company 3',
+    ]);
+    expect(compiled.querySelector('#experience .prompt__command')?.textContent).toBe(
+      'ls -l ~/experience | head -3',
+    );
+    expect(toggle().textContent?.trim()).toBe('[+] show 2 more');
+    expect(toggle().getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('should show all experiences after asking for more', async () => {
+    toggle().click();
+    await fixture.whenStable();
+
+    expect(companies()).toEqual(experience.map((job) => `Developer @ ${job.company}`));
+    expect(compiled.querySelector('#experience .prompt__command')?.textContent).toBe(
+      'ls -l ~/experience',
+    );
+    expect(toggle().textContent?.trim()).toBe('[-] show less');
+    expect(toggle().getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('should collapse back to three experiences', async () => {
+    toggle().click();
+    await fixture.whenStable();
+    toggle().click();
+    await fixture.whenStable();
+
+    expect(companies()).toHaveLength(3);
   });
 });
 
