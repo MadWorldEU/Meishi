@@ -137,20 +137,34 @@
         </div>
       </section>
 
-      <section id="languages" class="block">
-        <p class="prompt">
-          <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
-          <span class="prompt__command">locale --list</span>
-        </p>
-        <dl class="languages">
-          @for (language of cv.languages; track language.name) {
-            <div class="languages__row">
-              <dt>{{ language.name }}</dt>
-              <dd class="accent">{{ languageLevelLabels[language.level] }}</dd>
-            </div>
-          }
-        </dl>
-      </section>
+      <div class="columns">
+        <section id="languages" class="block">
+          <p class="prompt">
+            <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
+            <span class="prompt__command">locale --list</span>
+          </p>
+          <dl class="languages">
+            @for (language of cv.languages; track language.name) {
+              <div class="languages__row">
+                <dt>{{ language.name }}</dt>
+                <dd class="accent">{{ languageLevelLabels[language.level] }}</dd>
+              </div>
+            }
+          </dl>
+        </section>
+
+        <section id="hobbies" class="block">
+          <p class="prompt">
+            <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
+            <span class="prompt__command">cat hobbies.txt</span>
+          </p>
+          <ul class="entry__list">
+            @for (hobby of cv.hobbies; track hobby) {
+              <li>{{ hobby }}</li>
+            }
+          </ul>
+        </section>
+      </div>
 
       <section id="contact" class="block">
         <p class="prompt">

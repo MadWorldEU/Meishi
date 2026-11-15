@@ -65,6 +65,10 @@ internal sealed class DefaultCurriculumVitaeSeeder(ICurriculaVitaeRepository rep
         curriculumVitae.AddLanguage(new Language("English", LanguageLevel.Expert));
         curriculumVitae.AddLanguage(new Language("German", LanguageLevel.Beginner));
 
+        curriculumVitae.AddHobby("Running");
+        curriculumVitae.AddHobby("Photography");
+        curriculumVitae.AddHobby("Board games");
+
         return curriculumVitae;
     }
 }

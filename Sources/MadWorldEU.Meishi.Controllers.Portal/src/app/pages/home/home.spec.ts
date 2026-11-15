@@ -43,6 +43,7 @@ const CV: CurriculumVitae = {
     { name: 'French', level: 'Comfortable' },
     { name: 'German', level: 'Beginner' },
   ],
+  hobbies: ['Running', 'Photography'],
 };
 
 describe('Home', () => {
@@ -150,7 +151,15 @@ describe('Home', () => {
 
     it('should render a navigation link for every section', () => {
       const links = Array.from(compiled.querySelectorAll<HTMLAnchorElement>('nav a'));
-      const sections = ['about', 'experience', 'education', 'skills', 'languages', 'contact'];
+      const sections = [
+        'about',
+        'experience',
+        'education',
+        'skills',
+        'languages',
+        'hobbies',
+        'contact',
+      ];
 
       expect(links.map((link) => link.getAttribute('href'))).toEqual(sections.map((s) => `#${s}`));
       expect(links.map((link) => link.textContent?.trim())).toEqual(sections.map((s) => `./${s}`));
@@ -222,6 +231,16 @@ describe('Home', () => {
         'comfortable',
         'beginner',
       ]);
+    });
+
+    it('should render every hobby', () => {
+      expect(texts('#hobbies li')).toEqual(CV.hobbies);
+    });
+
+    it('should place hobbies next to languages', () => {
+      const columns = Array.from(compiled.querySelectorAll('.columns > section'), (s) => s.id);
+
+      expect(columns).toEqual(['languages', 'hobbies']);
     });
 
     it('should render every contact link', () => {

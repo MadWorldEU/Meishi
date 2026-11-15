@@ -48,4 +48,5 @@ export interface CurriculumVitae {
   skills: SkillGroup[];
   contact: ContactLink[];
   languages: Language[];
+  hobbies: string[];
 }

@@ -39,6 +39,7 @@ export class Home {
     'education',
     'skills',
     'languages',
+    'hobbies',
     'contact',
   ];
   protected readonly experiencePreviewCount = EXPERIENCE_PREVIEW_COUNT;
