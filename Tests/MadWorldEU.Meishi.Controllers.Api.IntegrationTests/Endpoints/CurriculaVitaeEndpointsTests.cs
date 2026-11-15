@@ -37,4 +37,31 @@ public sealed class CurriculaVitaeEndpointsTests(WebApplicationFactory<Program> 
         Assert.NotEmpty(body.Skills);
         Assert.NotEmpty(body.Contact);
     }
+
+    [Fact]
+    public async Task GetDefault_WhenCalled_ReturnsExperienceFromCurrentToOldest()
+    {
+        // Arrange
+        using var client = factory
+            .WithWebHostBuilder(builder => builder.UseSetting("ConnectionStrings:meishi-db", database.ConnectionString))
+            .CreateClient();
+
+        // Act
+        var body = await client.GetFromJsonAsync<GetDefaultCurriculumVitaeResponse>("/curricula-vitae");
+
+        // Assert
+        Assert.NotNull(body);
+        var periods = body.Experience.Select(experience => ParsePeriod(experience.Period)).ToList();
+        var expected = periods.OrderByDescending(period => period.EndYear).ThenByDescending(period => period.StartYear);
+        Assert.Equal(expected, periods);
+    }
+
+    /// <summary>Parses <c>2020 - 2023</c> or <c>2023 - present</c>, treating an ongoing period as ending last.</summary>
+    private static (int EndYear, int StartYear) ParsePeriod(string period)
+    {
+        var years = period.Split(" - ");
+        var endYear = years[1] == "present" ? int.MaxValue : int.Parse(years[1]);
+
+        return (endYear, int.Parse(years[0]));
+    }
 }

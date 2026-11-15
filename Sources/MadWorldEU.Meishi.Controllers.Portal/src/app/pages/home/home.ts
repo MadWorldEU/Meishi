@@ -6,6 +6,9 @@ import { AppSettings } from '../../shared/app-settings';
 
 export const CURRICULUM_VITAE_PATH = '/curricula-vitae';
 
+/** How many experiences are shown before the visitor asks for the rest. */
+export const EXPERIENCE_PREVIEW_COUNT = 3;
+
 export type CurriculumVitaeState =
   | { status: 'loading' }
   | { status: 'success'; name: string; curriculumVitae: CurriculumVitae }
@@ -23,6 +26,8 @@ export class Home {
 
   protected readonly state = signal<CurriculumVitaeState>({ status: 'loading' });
   protected readonly sections = ['about', 'experience', 'education', 'skills', 'contact'];
+  protected readonly experiencePreviewCount = EXPERIENCE_PREVIEW_COUNT;
+  protected readonly showAllExperience = signal(false);
 
   constructor() {
     this.http.get<CurriculumVitae>(this.curriculumVitaeUrl).subscribe({
@@ -48,6 +53,10 @@ export class Home {
         });
       },
     });
+  }
+
+  protected toggleExperience(): void {
+    this.showAllExperience.update((showAll) => !showAll);
   }
 
   /** Renders a skill level (0-10) as an ASCII bar, e.g. [########--]. */

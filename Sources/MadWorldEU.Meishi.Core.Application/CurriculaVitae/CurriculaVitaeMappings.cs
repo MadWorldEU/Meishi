@@ -12,7 +12,11 @@ internal static class CurriculaVitaeMappings
             Role = curriculumVitae.Role,
             Location = curriculumVitae.Location,
             About = curriculumVitae.About,
-            Experience = [.. curriculumVitae.Experience.Select(experience => experience.ToResult())],
+            // Current job first, oldest last.
+            Experience = [.. curriculumVitae.Experience
+                .OrderByDescending(experience => experience.Period.EndYear ?? int.MaxValue)
+                .ThenByDescending(experience => experience.Period.StartYear)
+                .Select(experience => experience.ToResult())],
             Education = [.. curriculumVitae.Education.Select(education => education.ToResult())],
             Skills = [.. curriculumVitae.SkillGroups.Select(skillGroup => skillGroup.ToResult())],
             Contact = [.. curriculumVitae.ContactLinks.Select(contactLink => contactLink.ToResult())],

@@ -161,6 +161,27 @@
   }
 }
 
+// Toggles between the first few experiences and all of them.
+.more {
+  margin-top: 1rem;
+  padding: 0;
+  font: inherit;
+  color: var(--green);
+  text-shadow: inherit;
+  background: none;
+  border: 0;
+  border-bottom: 1px dashed var(--green-dim);
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--green);
+    color: var(--bg);
+    text-shadow: none;
+    outline: none;
+  }
+}
+
 .skills {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

@@ -25,6 +25,13 @@
       </header>
     } @else {
       @let cv = current.curriculumVitae;
+      @let hasMoreExperience = cv.experience.length > experiencePreviewCount;
+      @let visibleExperience =
+        showAllExperience() ? cv.experience : cv.experience.slice(0, experiencePreviewCount);
+      @let experienceCommand =
+        visibleExperience.length < cv.experience.length
+          ? 'ls -l ~/experience | head -' + experiencePreviewCount
+          : 'ls -l ~/experience';
       <nav class="nav" aria-label="Sections">
         @for (section of sections; track section) {
           <a [href]="'#' + section">./{{ section }}</a>
@@ -54,10 +61,10 @@
       <section id="experience" class="block">
         <p class="prompt">
           <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
-          <span class="prompt__command">ls -l ~/experience</span>
+          <span class="prompt__command">{{ experienceCommand }}</span>
         </p>
-        <ul class="entries">
-          @for (job of cv.experience; track job.company + job.period) {
+        <ul id="experience-entries" class="entries">
+          @for (job of visibleExperience; track job.company + job.period) {
             <li class="entry">
               <div class="entry__head">
                 <span class="muted">drwxr-xr-x</span>
@@ -72,6 +79,21 @@
             </li>
           }
         </ul>
+        @if (hasMoreExperience) {
+          <button
+            type="button"
+            class="more"
+            aria-controls="experience-entries"
+            [attr.aria-expanded]="showAllExperience()"
+            (click)="toggleExperience()"
+          >
+            @if (showAllExperience()) {
+              [-] show less
+            } @else {
+              [+] show {{ cv.experience.length - experiencePreviewCount }} more
+            }
+          </button>
+        }
       </section>
 
       <section id="education" class="block">
