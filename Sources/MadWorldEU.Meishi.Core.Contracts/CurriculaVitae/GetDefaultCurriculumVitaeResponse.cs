@@ -12,6 +12,7 @@ public record GetDefaultCurriculumVitaeResponse
     public required IReadOnlyList<SkillGroupResponse> Skills { get; init; }
     public required IReadOnlyList<ContactLinkResponse> Contact { get; init; }
     public required IReadOnlyList<LanguageResponse> Languages { get; init; }
+    public required IReadOnlyList<string> Hobbies { get; init; }
 }
 
 public record ExperienceResponse

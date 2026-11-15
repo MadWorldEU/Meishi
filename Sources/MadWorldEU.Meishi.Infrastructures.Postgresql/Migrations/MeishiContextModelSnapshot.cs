@@ -17,7 +17,7 @@ partial class MeishiContextModelSnapshot : ModelSnapshot
     // If you encounter a merge conflict in the line below, it means you need to
     // discard one of the migration branches and recreate its migrations on top of
     // the other branch. See https://aka.ms/efcore-docs-migrations-conflicts for more info.
-    public override string LastMigrationId => "20261115173730_AddLanguageToCurriculaVitae";
+    public override string LastMigrationId => "20261115175832_AddHobbyToCurriculaVitae";
 
     protected override void BuildModel(ModelBuilder modelBuilder)
     {
@@ -40,6 +40,10 @@ partial class MeishiContextModelSnapshot : ModelSnapshot
                 b.Property<string>("FirstName")
                     .IsRequired()
                     .HasColumnType("text");
+
+                b.PrimitiveCollection<string[]>("Hobbies")
+                    .IsRequired()
+                    .HasColumnType("text[]");
 
                 b.Property<bool>("IsDefault")
                     .HasColumnType("boolean");

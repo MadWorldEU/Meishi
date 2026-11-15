@@ -60,6 +60,10 @@ internal sealed class CurriculumVitaeConfiguration : IEntityTypeConfiguration<Cu
             languages.Property(l => l.Level).HasConversion<string>().IsRequired();
         });
 
+        builder.PrimitiveCollection(cv => cv.Hobbies)
+            .HasField("_hobbies")
+            .IsRequired();
+
         builder.Ignore(cv => cv.DomainEvents);
     }
 }

@@ -21,6 +21,7 @@ internal static class CurriculaVitaeMappings
             Skills = [.. curriculumVitae.SkillGroups.Select(skillGroup => skillGroup.ToResult())],
             Contact = [.. curriculumVitae.ContactLinks.Select(contactLink => contactLink.ToResult())],
             Languages = [.. curriculumVitae.Languages.Select(language => language.ToResult())],
+            Hobbies = curriculumVitae.Hobbies,
         };
     }
 

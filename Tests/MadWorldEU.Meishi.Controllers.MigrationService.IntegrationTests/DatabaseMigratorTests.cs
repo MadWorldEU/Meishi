@@ -109,6 +109,8 @@ public sealed class DatabaseMigratorTests : IAsyncLifetime
         Assert.Equal(
             [new Language("Dutch", LanguageLevel.MotherTongue), new Language("English", LanguageLevel.Expert), new Language("German", LanguageLevel.Beginner)],
             curriculumVitae.Languages);
+
+        Assert.Equal(["Running", "Photography", "Board games"], curriculumVitae.Hobbies);
     }
 
     [Fact]

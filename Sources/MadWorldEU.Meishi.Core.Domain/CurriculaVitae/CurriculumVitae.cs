@@ -9,6 +9,7 @@ public sealed class CurriculumVitae : AggregateRoot<Guid>
     private readonly List<SkillGroup> _skillGroups = [];
     private readonly List<ContactLink> _contactLinks = [];
     private readonly List<Language> _languages = [];
+    private readonly List<string> _hobbies = [];
 
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
@@ -22,6 +23,7 @@ public sealed class CurriculumVitae : AggregateRoot<Guid>
     public IReadOnlyList<SkillGroup> SkillGroups => _skillGroups.AsReadOnly();
     public IReadOnlyList<ContactLink> ContactLinks => _contactLinks.AsReadOnly();
     public IReadOnlyList<Language> Languages => _languages.AsReadOnly();
+    public IReadOnlyList<string> Hobbies => _hobbies.AsReadOnly();
 
     public CurriculumVitae(Guid id, string firstName, string lastName, string role, string location, string about, bool isDefault)
         : base(id)
@@ -76,5 +78,12 @@ public sealed class CurriculumVitae : AggregateRoot<Guid>
     {
         ArgumentNullException.ThrowIfNull(language);
         _languages.Add(language);
+    }
+
+    /// <summary>Adds something the person enjoys doing outside of work, such as running or photography.</summary>
+    public void AddHobby(string hobby)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(hobby);
+        _hobbies.Add(hobby);
     }
 }

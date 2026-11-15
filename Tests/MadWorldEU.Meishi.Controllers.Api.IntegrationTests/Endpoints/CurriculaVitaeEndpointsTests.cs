@@ -38,6 +38,8 @@ public sealed class CurriculaVitaeEndpointsTests(WebApplicationFactory<Program> 
         Assert.NotEmpty(body.Contact);
         Assert.All(body.Languages, language => Assert.Contains(language.Level, Enum.GetNames<LanguageLevel>()));
         Assert.NotEmpty(body.Languages);
+        Assert.All(body.Hobbies, hobby => Assert.False(string.IsNullOrWhiteSpace(hobby)));
+        Assert.NotEmpty(body.Hobbies);
     }
 
     [Fact]
