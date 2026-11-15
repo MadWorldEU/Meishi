@@ -5,7 +5,7 @@
   </div>
 
   <div class="terminal__body">
-    @let current = name();
+    @let current = state();
     @if (current.status === 'loading') {
       <p class="prompt">
         <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
@@ -15,7 +15,16 @@
         <span class="loader__spinner" aria-hidden="true"><span>|/-\</span></span>
         <span>fetching curriculum vitae<span class="loader__dots" aria-hidden="true"></span></span>
       </p>
+    } @else if (current.status === 'error') {
+      <header class="block">
+        <p class="prompt">
+          <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
+          <span class="prompt__command">whoami</span>
+        </p>
+        <p class="accent">whoami: {{ current.message }}</p>
+      </header>
     } @else {
+      @let cv = current.curriculumVitae;
       <nav class="nav" aria-label="Sections">
         @for (section of sections; track section) {
           <a [href]="'#' + section">./{{ section }}</a>
@@ -27,14 +36,7 @@
           <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
           <span class="prompt__command">whoami</span>
         </p>
-        @switch (current.status) {
-          @case ('success') {
-            <h1 class="name">{{ current.name }}</h1>
-          }
-          @case ('error') {
-            <p class="accent">whoami: {{ current.message }}</p>
-          }
-        }
+        <h1 class="name">{{ current.name }}</h1>
         <p>
           <span class="accent">&gt;</span> {{ cv.role }}
           <span class="muted">// {{ cv.location }}</span>
@@ -129,7 +131,9 @@
           }
         </dl>
       </section>
+    }
 
+    @if (current.status !== 'loading') {
       <p class="prompt">
         <span class="prompt__user">visitor&#64;cv<span class="prompt__path">:~$</span></span>
         <span class="cursor" aria-hidden="true"></span>

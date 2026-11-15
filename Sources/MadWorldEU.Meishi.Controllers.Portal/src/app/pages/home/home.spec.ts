@@ -3,9 +3,41 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { AppSettings } from '../../shared/app-settings';
 import { Home } from './home';
-import { CV } from '../../cv';
+import { CurriculumVitae } from '../../cv';
 
 const CURRICULUM_VITAE_URL = 'https://api.example.com/curricula-vitae';
+
+const CV: CurriculumVitae = {
+  firstName: 'Jane',
+  lastName: 'Roe',
+  role: 'Staff Engineer',
+  location: 'Utrecht',
+  about: 'Builds things that last.',
+  experience: [
+    {
+      period: '2022 - present',
+      role: 'Staff Engineer',
+      company: 'Acme',
+      highlights: ['Led the platform team.', 'Migrated everything to .NET.'],
+    },
+    { period: '2018 - 2022', role: 'Developer', company: 'Globex', highlights: ['Shipped often.'] },
+  ],
+  education: [{ period: '2014 - 2018', degree: 'MSc Software Engineering', school: 'TU Delft' }],
+  skills: [
+    {
+      name: 'backend',
+      skills: [
+        { name: 'C#', level: 10 },
+        { name: 'PostgreSQL', level: 0 },
+      ],
+    },
+    { name: 'frontend', skills: [{ name: 'Angular', level: 6 }] },
+  ],
+  contact: [
+    { label: 'email', value: 'jane@example.com', href: 'mailto:jane@example.com' },
+    { label: 'github', value: 'github.com/jane', href: 'https://github.com/jane' },
+  ],
+};
 
 describe('Home', () => {
   let fixture: ComponentFixture<Home>;
@@ -45,7 +77,7 @@ describe('Home', () => {
   });
 
   it('should render the full name from the API', async () => {
-    curriculumVitaeRequest().flush({ firstName: 'Jane', lastName: 'Roe' });
+    curriculumVitaeRequest().flush(CV);
     await fixture.whenStable();
 
     expect(compiled.querySelector('h1')?.textContent).toBe('Jane Roe');
@@ -53,7 +85,7 @@ describe('Home', () => {
   });
 
   it('should show the full name in the browser tab', async () => {
-    curriculumVitaeRequest().flush({ firstName: 'Jane', lastName: 'Roe' });
+    curriculumVitaeRequest().flush(CV);
     await fixture.whenStable();
 
     expect(document.title).toBe('Jane Roe · CV');
@@ -89,17 +121,19 @@ describe('Home', () => {
     expect(header()?.textContent).toContain('whoami: the API could not be reached');
   });
 
-  it('should still render the sections when the API fails', async () => {
+  it('should not render the sections when the API fails', async () => {
     curriculumVitaeRequest().error(new ProgressEvent('error'));
     await fixture.whenStable();
 
     expect(compiled.querySelector('.loader')).toBeNull();
-    expect(compiled.querySelectorAll('section').length).toBe(5);
+    expect(compiled.querySelector('nav')).toBeNull();
+    expect(compiled.querySelector('section')).toBeNull();
+    expect(compiled.querySelector('.cursor')).not.toBeNull();
   });
 
   describe('once the API has answered', () => {
     beforeEach(async () => {
-      curriculumVitaeRequest().flush({ firstName: 'Jane', lastName: 'Roe' });
+      curriculumVitaeRequest().flush(CV);
       await fixture.whenStable();
     });
 
