@@ -210,6 +210,19 @@
   margin-right: 1ch;
 }
 
+.languages__row {
+  display: flex;
+  gap: 2ch;
+
+  dt {
+    min-width: 12ch;
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
 .contact__row {
   display: flex;
   gap: 2ch;

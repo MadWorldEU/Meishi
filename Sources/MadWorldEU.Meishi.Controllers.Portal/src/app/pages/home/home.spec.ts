@@ -37,6 +37,12 @@ const CV: CurriculumVitae = {
     { label: 'email', value: 'jane@example.com', href: 'mailto:jane@example.com' },
     { label: 'github', value: 'github.com/jane', href: 'https://github.com/jane' },
   ],
+  languages: [
+    { name: 'Dutch', level: 'MotherTongue' },
+    { name: 'English', level: 'Expert' },
+    { name: 'French', level: 'Comfortable' },
+    { name: 'German', level: 'Beginner' },
+  ],
 };
 
 describe('Home', () => {
@@ -144,7 +150,7 @@ describe('Home', () => {
 
     it('should render a navigation link for every section', () => {
       const links = Array.from(compiled.querySelectorAll<HTMLAnchorElement>('nav a'));
-      const sections = ['about', 'experience', 'education', 'skills', 'contact'];
+      const sections = ['about', 'experience', 'education', 'skills', 'languages', 'contact'];
 
       expect(links.map((link) => link.getAttribute('href'))).toEqual(sections.map((s) => `#${s}`));
       expect(links.map((link) => link.textContent?.trim())).toEqual(sections.map((s) => `./${s}`));
@@ -206,6 +212,16 @@ describe('Home', () => {
       expect(texts('.skill__bar')).toEqual(
         allSkills.map((skill) => `[${'#'.repeat(skill.level)}${'-'.repeat(10 - skill.level)}]`),
       );
+    });
+
+    it('should render every language with its level', () => {
+      expect(texts('#languages dt')).toEqual(CV.languages.map((language) => language.name));
+      expect(texts('#languages dd')).toEqual([
+        'mother tongue',
+        'expert',
+        'comfortable',
+        'beginner',
+      ]);
     });
 
     it('should render every contact link', () => {

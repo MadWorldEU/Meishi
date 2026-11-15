@@ -8,6 +8,7 @@ public sealed class CurriculumVitae : AggregateRoot<Guid>
     private readonly List<Education> _education = [];
     private readonly List<SkillGroup> _skillGroups = [];
     private readonly List<ContactLink> _contactLinks = [];
+    private readonly List<Language> _languages = [];
 
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
@@ -20,6 +21,7 @@ public sealed class CurriculumVitae : AggregateRoot<Guid>
     public IReadOnlyList<Education> Education => _education.AsReadOnly();
     public IReadOnlyList<SkillGroup> SkillGroups => _skillGroups.AsReadOnly();
     public IReadOnlyList<ContactLink> ContactLinks => _contactLinks.AsReadOnly();
+    public IReadOnlyList<Language> Languages => _languages.AsReadOnly();
 
     public CurriculumVitae(Guid id, string firstName, string lastName, string role, string location, string about, bool isDefault)
         : base(id)
@@ -67,5 +69,12 @@ public sealed class CurriculumVitae : AggregateRoot<Guid>
     {
         ArgumentNullException.ThrowIfNull(contactLink);
         _contactLinks.Add(contactLink);
+    }
+
+    /// <summary>Adds a language the person speaks, together with how well they speak it.</summary>
+    public void AddLanguage(Language language)
+    {
+        ArgumentNullException.ThrowIfNull(language);
+        _languages.Add(language);
     }
 }

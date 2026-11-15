@@ -30,6 +30,13 @@ export interface ContactLink {
   href: string;
 }
 
+export type LanguageLevel = 'MotherTongue' | 'Expert' | 'Comfortable' | 'Beginner';
+
+export interface Language {
+  name: string;
+  level: LanguageLevel;
+}
+
 export interface CurriculumVitae {
   firstName: string;
   lastName: string;
@@ -40,4 +47,5 @@ export interface CurriculumVitae {
   education: Education[];
   skills: SkillGroup[];
   contact: ContactLink[];
+  languages: Language[];
 }

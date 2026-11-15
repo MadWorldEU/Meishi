@@ -52,6 +52,14 @@ internal sealed class CurriculumVitaeConfiguration : IEntityTypeConfiguration<Cu
             contactLinks.Property(cl => cl.Href).IsRequired();
         });
 
+        builder.Ignore(cv => cv.Languages);
+        builder.ComplexCollection<List<Language>, Language>("_languages", languages =>
+        {
+            languages.ToJson("Languages");
+            languages.Property(l => l.Name).IsRequired();
+            languages.Property(l => l.Level).HasConversion<string>().IsRequired();
+        });
+
         builder.Ignore(cv => cv.DomainEvents);
     }
 }

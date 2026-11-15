@@ -36,6 +36,8 @@ public sealed class CurriculaVitaeEndpointsTests(WebApplicationFactory<Program> 
         Assert.All(body.Skills, skillGroup => Assert.All(skillGroup.Skills, skill => Assert.InRange(skill.Level, 0, 10)));
         Assert.NotEmpty(body.Skills);
         Assert.NotEmpty(body.Contact);
+        Assert.All(body.Languages, language => Assert.Contains(language.Level, Enum.GetNames<LanguageLevel>()));
+        Assert.NotEmpty(body.Languages);
     }
 
     [Fact]
