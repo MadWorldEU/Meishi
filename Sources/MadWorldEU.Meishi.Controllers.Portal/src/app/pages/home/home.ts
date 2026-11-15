@@ -1,13 +1,21 @@
 import { Component, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Title } from '@angular/platform-browser';
-import { CurriculumVitae } from '../../cv';
+import { CurriculumVitae, LanguageLevel } from '../../cv';
 import { AppSettings } from '../../shared/app-settings';
 
 export const CURRICULUM_VITAE_PATH = '/curricula-vitae';
 
 /** How many experiences are shown before the visitor asks for the rest. */
 export const EXPERIENCE_PREVIEW_COUNT = 3;
+
+/** How each language level from the API is written on the page. */
+export const LANGUAGE_LEVEL_LABELS: Record<LanguageLevel, string> = {
+  MotherTongue: 'mother tongue',
+  Expert: 'expert',
+  Comfortable: 'comfortable',
+  Beginner: 'beginner',
+};
 
 export type CurriculumVitaeState =
   | { status: 'loading' }
@@ -25,9 +33,17 @@ export class Home {
   private readonly curriculumVitaeUrl = inject(AppSettings).apiUrl + CURRICULUM_VITAE_PATH;
 
   protected readonly state = signal<CurriculumVitaeState>({ status: 'loading' });
-  protected readonly sections = ['about', 'experience', 'education', 'skills', 'contact'];
+  protected readonly sections = [
+    'about',
+    'experience',
+    'education',
+    'skills',
+    'languages',
+    'contact',
+  ];
   protected readonly experiencePreviewCount = EXPERIENCE_PREVIEW_COUNT;
   protected readonly showAllExperience = signal(false);
+  protected readonly languageLevelLabels = LANGUAGE_LEVEL_LABELS;
 
   constructor() {
     this.http.get<CurriculumVitae>(this.curriculumVitaeUrl).subscribe({
