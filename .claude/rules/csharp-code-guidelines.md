@@ -21,3 +21,8 @@ paths:
 - Describe the behaviour a caller relies on, such as what is returned when nothing is found (for example `<c>null</c>`), not how it is implemented.
 - When a method implements an interface method that already has a summary, use `/// <inheritdoc />` instead of repeating it.
 - Generated code, such as EF Core migrations, is excluded.
+
+## Migrations
+
+- Never create EF Core migrations, by running `dotnet ef migrations add` or by writing migration files by hand. The user creates migrations themselves.
+- When a change to the model needs a migration, say so, so the user can create it.
